@@ -210,8 +210,7 @@ public class GameBoardHandler : MonoBehaviour {
         var numbers = FindObjectsOfType<Number>();
         foreach (var item in numbers)
         {
-            item.GetComponent<Number>().Fly(new Vector3(UnityEngine.Random.Range(-10, 10),
-                UnityEngine.Random.Range(-10, 10), UnityEngine.Random.Range(-10, 10)));
+            Destroy(item.gameObject);
         }
         ReturnButton.SetActive(true);
     }

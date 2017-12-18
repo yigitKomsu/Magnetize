@@ -24,6 +24,6 @@ public class ScoreHandler : MonoBehaviour {
 
     public void PrintScore()
     {
-        _playerText.text = "SCORE: " + Score;
+        _playerText.text = ProjectConstants.ScoreText + Score;
     }
 }

@@ -103,12 +103,11 @@ public class LevelManager : MonoBehaviour
     {
         Limit = limit;
         DontDestroyOnLoad(gameObject);
-        LoadLevel("CouchPlay");
+        LoadLevel(ProjectConstants.CouchPlay);
     }
 
     private void LoadLevel(string level)
     {
-        Debug.Log("Swishhh animation");
         bannerView.Destroy();
         SceneManager.LoadScene(level, LoadSceneMode.Single);
     }

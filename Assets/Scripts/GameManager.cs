@@ -54,8 +54,8 @@ public class GameManager : MonoBehaviour
         scored = false;
         if (LimitType == (int)LevelManager.LimitTypes.Time)
         {
-            TimerText[0].text = "TIME: " + Limit;
-            TimerText[1].text = "TIME: " + Limit;
+            TimerText[0].text = ProjectConstants.TimeText + Limit;
+            TimerText[1].text = ProjectConstants.TimeText + Limit;
             PlayerTimes[0] = Limit;
             PlayerTimes[1] = Limit;
             InvokeRepeating("UpdateFrame", 0, 1.0f);
@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
     private void UpdateFrame()
     {
         PlayerTimes[TurnNumber - 1]--;
-        TimerText[TurnNumber - 1].text = "TIME: " + PlayerTimes[TurnNumber - 1];
+        TimerText[TurnNumber - 1].text = ProjectConstants.TimeText + PlayerTimes[TurnNumber - 1];
         if (PlayerTimes[TurnNumber - 1] == 0)
         {
             CompareScores();
@@ -100,11 +100,13 @@ public class GameManager : MonoBehaviour
             ScoreObject[0].Scored(number);
             ScorePlayer(number + 1, 0);
         }
+        if (LimitType == (int)LevelManager.LimitTypes.Score)
+            ControlForScore();
     }
 
     public void ReturnToMenu()
     {
-        LevelManager.Manager.LoadLevelWithoutBanner("MainMenu");
+        LevelManager.Manager.LoadLevelWithoutBanner(ProjectConstants.MainMenu);
         Destroy(LevelManager.Manager.gameObject);
     }    
 
@@ -115,8 +117,6 @@ public class GameManager : MonoBehaviour
         obj.GetComponent<Number>().TurnNumber = turnNumber;
         obj.GetComponent<Number>().MyNumber = newCardNumber + 1;
         obj.GetComponent<SpriteRenderer>().sprite = Numbers[newCardNumber];
-        //obj.transform.GetChild(0).GetComponent<SpriteRenderer>().color = 
-        //    UnityEngine.Random.ColorHSV(0.3f + ((float)newCardNumber / 10), 0.3f + ((float)newCardNumber / 10), 0.05f, 0.15f, 0.8f, 1f);
     }
 
     private int GetNewNumber(int number)
@@ -140,14 +140,14 @@ public class GameManager : MonoBehaviour
     {
         if (ScoreObject[0].Score >= Limit)
         {
-            ScoreObject[0].PrintMessage("YOU WIN" + ScoreObject[0].Score);
-            ScoreObject[1].PrintMessage("YOU LOSE" + ScoreObject[1].Score);
+            ScoreObject[0].PrintMessage(ProjectConstants.WinText + ScoreObject[0].Score);
+            ScoreObject[1].PrintMessage(ProjectConstants.LoseText + ScoreObject[1].Score);
             BoardHandler.ClearTheBoard();
         }
-        else if (ScoreObject[0].Score >= Limit)
+        else if (ScoreObject[1].Score >= Limit)
         {
-            ScoreObject[0].PrintMessage("YOU LOSE" + ScoreObject[0].Score);
-            ScoreObject[1].PrintMessage("YOU WIN" + ScoreObject[1].Score);
+            ScoreObject[0].PrintMessage(ProjectConstants.LoseText + ScoreObject[0].Score);
+            ScoreObject[1].PrintMessage(ProjectConstants.WinText + ScoreObject[1].Score);
             BoardHandler.ClearTheBoard();
         }
     }
@@ -156,18 +156,18 @@ public class GameManager : MonoBehaviour
     {
         if (ScoreObject[0].Score > ScoreObject[1].Score)
         {
-            ScoreObject[0].PrintMessage("YOU WIN" + ScoreObject[0].Score);
-            ScoreObject[1].PrintMessage("YOU LOSE" + ScoreObject[1].Score);
+            ScoreObject[0].PrintMessage(ProjectConstants.WinText + ScoreObject[0].Score);
+            ScoreObject[1].PrintMessage(ProjectConstants.LoseText + ScoreObject[1].Score);
         }
         else if (ScoreObject[0].Score < ScoreObject[1].Score)
         {
-            ScoreObject[0].PrintMessage("YOU LOSE" + ScoreObject[0].Score);
-            ScoreObject[1].PrintMessage("YOU WIN" + ScoreObject[1].Score);
+            ScoreObject[0].PrintMessage(ProjectConstants.LoseText + ScoreObject[0].Score);
+            ScoreObject[1].PrintMessage(ProjectConstants.WinText + ScoreObject[1].Score);
         }
         else
         {
-            ScoreObject[0].PrintMessage("TIED" + ScoreObject[0].Score);
-            ScoreObject[1].PrintMessage("TIED" + ScoreObject[1].Score);
+            ScoreObject[0].PrintMessage(ProjectConstants.TiedText + ScoreObject[0].Score);
+            ScoreObject[1].PrintMessage(ProjectConstants.TiedText + ScoreObject[1].Score);
         }
     }
 
@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
         {
             TurnNumber = 1;
         }
-        ScoreObject[TurnNumber - 1].PrintMessage("YOUR TURN");
+        ScoreObject[TurnNumber - 1].PrintMessage(ProjectConstants.TurnText);
         flyPosition = ScoreObject[TurnNumber - 1].transform.GetChild(0);
         BoardHandler.flyPosition = flyPosition;
         StartCoroutine(WaitRoutine(TurnNumber - 1));

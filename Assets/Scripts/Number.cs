@@ -45,10 +45,8 @@ public class Number : MonoBehaviour
 
     public void Fly(Transform target)
     {
-        //verilen pozisyona uç
         transform.SetParent(target);
         StartCoroutine(WaitRoutine(target.position));
-        //belirli yakınlığa varınca yok et
     }
 
     public void Fly(Vector3 position)
