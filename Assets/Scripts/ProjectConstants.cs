@@ -1,6 +1,6 @@
 ﻿
-public class ProjectConstants {
-
+public class ProjectConstants
+{
     public const string WinText = "YOU WIN: ";
     public const string LoseText = "YOU LOSE: ";
     public const string TiedText = "TIED: ";
@@ -11,4 +11,10 @@ public class ProjectConstants {
     public const string MainMenu = "MainMenu";
     public const string CouchPlay = "CouchPlay";
 
+    public const string UnityAdId = "ca-app-pub-9092467960609637/7412064397";
+    public const string TestAdId = "ca-app-pub-3940256099942544/6300978111";
+
+    public static int PlayerOne = 0;
+    public static int PlayerTwo = 1;
+    public static int Noone = 2;
 }
