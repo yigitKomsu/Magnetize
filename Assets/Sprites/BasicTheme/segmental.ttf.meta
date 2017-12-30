@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 51a7e57099fd2c24c9010a083a0c245e
+timeCreated: 1514410657
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Segmental
+  fontNames:
+  - Segmental
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -13,17 +13,32 @@ public class Number : MonoBehaviour
     private SoundManager _soundManager;
     public int TurnNumber;
     private int ScoreForWhom;
+    private bool isDouble;
+    public bool isMagnetized;
+    private bool isRefill;
+    private SpriteRenderer sr;
 
-    IEnumerator WaitRoutine(Vector3 position)
+    IEnumerator WaitRoutine(Transform target)
     {
-        float speed = Random.Range(3f, 6f);
-        while (Vector3.Distance(transform.position, position) > 3f)
+        float speed = Random.Range(3f, 8f);
+        Vector3 offset = new Vector3(Random.Range(-0.4f, 0.4f), 0, 0);
+        Vector3 pos = target.position;
+        pos += offset;
+        if (isDouble) MyNumber *= 2;
+        while (Vector3.Distance(transform.position, pos) > 3f)
         {
-            Move(position, speed);
+            Move(pos, speed);
             yield return null;
         }
         _manager.DestroyedNumber(MyNumber - 1, ScoreForWhom - 1);
-        Destroy(gameObject);
+
+        if (isMagnetized) _manager.BoardHandler.DestroyMagnetized(ScoreForWhom - 1, target);
+
+        if (isRefill) _manager.RefillPower(MyNumber, ScoreForWhom - 1);
+
+        TurnNumber = -1;
+        GetComponent<BoxCollider2D>().enabled = false;
+        StopAllCoroutines();
     }
 
     private void Move(Vector3 position, float speed)
@@ -34,6 +49,7 @@ public class Number : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        sr = GetComponent<SpriteRenderer>();
         _turnManager = TurnManager.Manager;
         _soundManager = SoundManager.Manager;
         _manager = GameManager.Manager;
@@ -51,12 +67,27 @@ public class Number : MonoBehaviour
     public void Fly(Transform target)
     {
         _myTransform.SetParent(target);
-        StartCoroutine(WaitRoutine(target.position));
+        StartCoroutine(WaitRoutine(target));
     }
 
-    public void Fly(Vector3 position)
+    public void DoublePower()
     {
-        StartCoroutine(WaitRoutine(position));
+        GetComponent<SpriteRenderer>().sprite = _manager.Double[MyNumber - 1];
+        isDouble = true;
+    }
+
+    public void Magnetize(int? row = null, int? col = null)
+    {
+        sr.sprite = _manager.Magnetized[MyNumber - 1];
+        if (row != null)
+            _manager.BoardHandler.MagnetizeRow(row, col);
+        isMagnetized = true;
+    }
+
+    public void Refill()
+    {
+        sr.sprite = _manager.Refill[MyNumber - 1];
+        isRefill = true;
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -103,5 +134,4 @@ public class Number : MonoBehaviour
         }
         _soundManager.DropNumber();
     }
-
 }

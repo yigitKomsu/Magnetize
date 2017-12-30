@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class TimeController : MonoBehaviour {
+public class TimeController : MonoBehaviour
+{
     [SerializeField]
     private Text TimerText;
     [SerializeField]
@@ -42,14 +43,22 @@ public class TimeController : MonoBehaviour {
 
     private void UpdateFrame()
     {
-        if(_turnManager.TurnNumber == TurnNumber)
+        if (_turnManager.TurnNumber == TurnNumber)
         {
             PlayerTime--;
             TimerText.text = PlayerTime.ToString("000");
             if (PlayerTime == 0)
             {
-                _manager.FinishByTime(TurnNumber - 1);
-                FinishGame();                
+                //_manager.FinishByTime(TurnNumber - 1);
+                if (_turnManager.timeOut == true)
+                {
+                    StopTimer();
+                    _manager.FinishGame();
+                }
+                _turnManager.ChangeTurn();
+                _turnManager.timeOut = true;
+                _manager.PrintMessageToTurnField();
+                FinishGame();
             }
         }
     }

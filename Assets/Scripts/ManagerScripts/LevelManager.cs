@@ -3,6 +3,7 @@ using System.Collections;
 using GoogleMobileAds.Api;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class LevelManager : MonoBehaviour
 {
     [SerializeField]
@@ -14,14 +15,10 @@ public class LevelManager : MonoBehaviour
     public LimitTypes Type;
     private BannerView bannerView;
 
+    private int timeLimit, scoreLimit, pieceLimit;
+
     public static LevelManager Manager;
 
-    public enum LimitTypes
-    {
-        Limitless = 0,
-        Time = 1,
-        Score = 2
-    }
 
     private void Awake()
     {
@@ -35,8 +32,9 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        Limit = timeLimit = scoreLimit = pieceLimit = 30;
         if (Manager == null) Manager = this;
-        StartCoroutine(Load());
+        //StartCoroutine(Load());
     }
 
     private void OnLevelWasLoaded(int level)
@@ -74,36 +72,13 @@ public class LevelManager : MonoBehaviour
         bannerView.LoadAd(request);
     }
 
-    public void ChangePosHorizontal(int direction)
-    {
-        MenuButtonPanel.GetComponent<RectTransform>().localPosition += new Vector3(1440 * direction, 0, 0);
-    }
-
-    public void ChangePosVertical(int direction)
-    {
-        MenuButtonPanel.GetComponent<RectTransform>().localPosition += new Vector3(0, 2560 * direction, 0);
-    }
-
     public void PlaySound()
     {
         GetComponent<AudioSource>().Play();
     }
 
-    public void SetTime()
+    public void LoadLevel()
     {
-        this.Type = LimitTypes.Time;
-        ChangePosVertical(-1);
-    }
-
-    public void SetScore()
-    {
-        this.Type = LimitTypes.Score;
-        ChangePosVertical(1);
-    }
-
-    public void SetLimit(int limit)
-    {
-        Limit = limit;
         DontDestroyOnLoad(gameObject);
         LoadLevel(ProjectConstants.CouchPlay);
     }
@@ -114,6 +89,51 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene(level, LoadSceneMode.Single);
     }
 
+    public void SetLimit(int value)
+    {
+        if(Limit + value > 0)
+            Limit += value;
+        int type = (int)Type;
+        switch (type)
+        {
+            case 0:
+                Type = LimitTypes.Charge;
+                pieceLimit = Limit;
+                break;
+            case 1:
+                Type = LimitTypes.Time;
+                timeLimit = Limit;
+                break;
+            case 2:
+                Type = LimitTypes.Score;
+                scoreLimit = Limit;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void SetType(int type)
+    {
+        switch (type)
+        {
+            case 0:
+                Type = LimitTypes.Charge;
+                Limit = pieceLimit;
+                break;
+            case 1:
+                Type = LimitTypes.Time;
+                Limit = timeLimit;
+                break;
+            case 2:
+                Type = LimitTypes.Score;
+                Limit = scoreLimit;
+                break;
+            default:
+                break;
+        }
+    }
+
     public void LoadLevelWithoutBanner(string level)
     {
         SceneManager.LoadSceneAsync(level);
@@ -122,6 +142,7 @@ public class LevelManager : MonoBehaviour
     private IEnumerator Load()
     {
         yield return new WaitForSeconds(2);
+        
         SplashScreen.SetActive(false);
     }
 

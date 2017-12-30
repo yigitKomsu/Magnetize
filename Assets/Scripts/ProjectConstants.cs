@@ -1,9 +1,9 @@
 ﻿
 public class ProjectConstants
 {
-    public const string WinText = "YOU WIN: ";
-    public const string LoseText = "YOU LOSE: ";
-    public const string TiedText = "TIED: ";
+    public const string WinText = "YOU WIN";
+    public const string LoseText = "YOU LOSE";
+    public const string TiedText = "TIED";
     public const string TimeText = "TIME: ";
     public const string TurnText = "YOUR TURN";
     public const string ScoreText = "SCORE: ";
@@ -17,4 +17,19 @@ public class ProjectConstants
     public static int PlayerOne = 0;
     public static int PlayerTwo = 1;
     public static int Noone = 2;
+}
+
+public enum PowerType
+{
+    None = -1,
+    DoubleScore = 0,
+    MagnetizerBomb = 1,
+    Refill = 2
+}
+
+public enum LimitTypes
+{
+    Charge = 0,
+    Time = 1,
+    Score = 2
 }

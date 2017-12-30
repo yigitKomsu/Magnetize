@@ -10,6 +10,8 @@ public class GameBoardHandler : MonoBehaviour
     public int sum;
     [SerializeField]
     private Text[] TotalText;
+    [SerializeField]
+    private GameObject PowerUp;
     private TurnManager _turnManager;
     // Use this for initialization
     void Start()
@@ -188,11 +190,69 @@ public class GameBoardHandler : MonoBehaviour
         }
     }
 
+    private void SpawnPowerUp()
+    {
+        float perc = Random.Range(0, 99);
+        if (perc > 60 && !CheckBoardFull())
+        {
+            //Spawn a PowerUp object at a random at an EMPTY position
+            int rand_x = Random.Range(-2, 2);
+            int rand_y = Random.Range(-2, 2);
+            if (!GameBoardMatrix.row[rand_y + 2].column[rand_x + 2] && !GameBoardMatrix.row[rand_y + 2].pColumn[rand_x + 2])
+            {
+                var up = Instantiate(PowerUp, transform);
+                up.transform.localPosition = new Vector2(rand_x, rand_y);
+                GameBoardMatrix.row[rand_y + 2].pColumn[rand_x + 2] = up.GetComponent<PowerUp>();
+            }
+        }
+    }
+
+  
+
+    public void MagnetizeRow(int? row, int? col)
+    {
+        if(row != null && col != null)
+        {
+            int r = (int)row;
+            int c = (int)col;
+            for (int i = 0; i < GameBoardMatrix.row[r].column.Length; i++)
+            {
+                if (i != col && GameBoardMatrix.row[r].column[i] != null)
+                    GameBoardMatrix.row[r].column[i].Magnetize();
+            }
+        }
+    }
+
+    public void GivePower(int pos_x, int pos_y, Number card)
+    {
+        if (GameBoardMatrix.row[pos_y].pColumn[pos_x] != null)
+        {
+            var powerUp = GameBoardMatrix.row[pos_y].pColumn[pos_x].GetComponent<PowerUp>();
+            GameBoardMatrix.row[pos_y].pColumn[pos_x] = null;
+            powerUp.PowerThings(card, pos_y, pos_x);
+        }
+    }
+
+    public void DestroyMagnetized(int turnNumber, Transform pos)
+    {
+        for (int i = 0; i < GameBoardMatrix.row.Length; i++)
+        {
+            for (int j = 0; j < GameBoardMatrix.row[i].column.Length; j++)
+            {
+                if (GameBoardMatrix.row[i].column[j] != null && GameBoardMatrix.row[i].column[j].isMagnetized)
+                {
+                    GameBoardMatrix.row[i].column[j].Destroy(i, j, turnNumber + 1, pos);
+                }
+            }
+        }
+    }
+
     public bool ControlMatrix(int column, int row, int cardNumber, Number number)
     {
         scored = false;
         ClearCellsAndScoreInRow(GameBoardMatrix.row[row].column, row, cardNumber, number);
         ClearCellsAndScoreInColumn(GameBoardMatrix.row, column, cardNumber, number);
+        SpawnPowerUp();
         return scored;
     }
 
@@ -211,12 +271,25 @@ public class GameBoardHandler : MonoBehaviour
 
     public void ClearTheBoard()
     {
-        var numbers = FindObjectsOfType<Number>();
-        foreach (var item in numbers)
+        //var numbers = FindObjectsOfType<Number>();
+        foreach (var item in GameBoardMatrix.row)
         {
-            Destroy(item.gameObject);
+            foreach (var a in item.column)
+            {
+                if (a != null)
+                    Destroy(a.gameObject);
+            }
         }
         ReturnButton.SetActive(true);
+        SumTheBoard();
+        foreach (var item in GameBoardMatrix.row)
+        {
+            foreach (var a in item.pColumn)
+            {
+                if (a != null)
+                    Destroy(a.gameObject);
+            }
+        }
     }
 
     public int SumTheBoard(int number = 0)

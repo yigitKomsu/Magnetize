@@ -35,4 +35,9 @@ public class SoundManager : MonoBehaviour {
         LoopingPlayer.clip = LoopingTimer;
         LoopingPlayer.Play();
     }
+
+    public void StopLoop()
+    {
+        LoopingPlayer.Stop();
+    }
 }

@@ -6,6 +6,9 @@ public class TurnManager : MonoBehaviour
     public static TurnManager Manager;
     [SerializeField]
     private Animator[] _animator;
+    [SerializeField]
+    private TimeController[] Timer;
+    public bool timeOut;
     private void Awake()
     {
         Manager = this;
@@ -15,6 +18,14 @@ public class TurnManager : MonoBehaviour
     void Start()
     {
         _animator[TurnNumber - 1].SetTrigger("StartTurn");
+        if (GameManager.Manager.LimitType == (int)LimitTypes.Time)
+        {
+            Timer[0].Init(GameManager.Manager.Limit, 0);
+            Timer[1].Init(GameManager.Manager.Limit, 1);
+            Timer[TurnNumber - 1].StartTimer();
+            SoundManager.Manager.StartTimer();
+        }
+        
     }
 
     // Update is called once per frame
@@ -23,19 +34,34 @@ public class TurnManager : MonoBehaviour
 
     }
 
+    public void AddTime(int time, int turn)
+    {
+        Timer[turn].PlayerTime += time;
+    }
+
     public void ChangeTurn()
     {
+        if (timeOut)
+            return;
+        if (GameManager.Manager.LimitType == (int)LimitTypes.Time)
+            Timer[TurnNumber - 1].StopTimer();
+        _animator[TurnNumber - 1].SetTrigger("StopTurn");
         if (TurnNumber == 1)
-        {
-            _animator[TurnNumber - 1].SetTrigger("StopTurn");
-            TurnNumber = 2;
-            _animator[TurnNumber - 1].SetTrigger("StartTurn");
+        {            
+            TurnNumber = 2;            
         }
         else
         {
-            _animator[TurnNumber - 1].SetTrigger("StopTurn");
             TurnNumber = 1;
-            _animator[TurnNumber - 1].SetTrigger("StartTurn");
         }
+        _animator[TurnNumber - 1].SetTrigger("StartTurn");
+        if (GameManager.Manager.LimitType == (int)LimitTypes.Time)
+            Timer[TurnNumber - 1].StartTimer();
     }
+
+    public int GetRemainingTime(int TurnIndex)
+    {
+        return Timer[TurnIndex].PlayerTime;
+    }
+
 }
