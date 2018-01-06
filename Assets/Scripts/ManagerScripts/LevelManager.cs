@@ -1,80 +1,100 @@
-﻿using System;
-using System.Collections;
-using GoogleMobileAds.Api;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+
+    public static LevelManager GetLevelManager { get; private set; }
     [SerializeField]
     private GameObject SplashScreen;
     [SerializeField]
     private GameObject MenuButtonPanel;
+    [SerializeField]
+    private Text UsernameText;
     private GameManager _manager;
     public int Limit;
     public LimitTypes Type;
-    private BannerView bannerView;
-
     private int timeLimit, scoreLimit, pieceLimit;
-
-    public static LevelManager Manager;
-
 
     private void Awake()
     {
-#if UNITY_ANDROID
-        string appId = "ca-app-pub-9092467960609637~7439984559";
-#endif
-        MobileAds.Initialize(appId);
-        RequestBanner();
-        bannerView.OnAdLoaded += BannerView_OnAdLoaded;
+        GetLevelManager = this;
     }
 
     private void Start()
     {
+        AdController.ConnectAds();
+        if (!GPGController.IsAuthenticated())
+            GPGController.LoginToGPG();
         Limit = timeLimit = scoreLimit = pieceLimit = 30;
-        if (Manager == null) Manager = this;
-        //StartCoroutine(Load());
+        if (GetLevelManager == null) GetLevelManager = this;
+        SetDevicePrefs();
+    }
+
+    public void UpdateUsernameText(string name)
+    {
+        UsernameText.text = name;
+    }
+    public void MuteOrUnmute()
+    {
+        if (PlayerPrefs.GetInt("Muted") == 0)
+        {
+            PlayerPrefs.SetInt("Muted", 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Muted", 0);
+        }
+        Debug.Log(PlayerPrefs.GetInt("Muted"));
+    }
+
+    private void SetDevicePrefs()
+    {
+        if (!PlayerPrefs.HasKey("Credit"))
+        {
+            PlayerPrefs.SetInt("Credit", 500);
+        }
+        if (!PlayerPrefs.HasKey("Muted"))
+        {
+            PlayerPrefs.SetInt("Muted", 0);
+        }
+        if (!PlayerPrefs.HasKey("Tutorial"))
+        {
+            PlayerPrefs.SetInt("Tutorial", 0);
+        }
+        if (PlayerPrefs.GetInt("Tutorial") == 0)
+        {
+            LoadLevel(ProjectConstants.Tutorial);
+            return;
+        }
+        else
+        {
+            GPGController.UnlockAchievement(GPGSIds.achievement_welcome);
+        }
     }
 
     private void OnLevelWasLoaded(int level)
     {
-        _manager = GameManager.Manager;
+        _manager = GameManager.GetGameManager;
         if (level == 1)
         {
             _manager.Limit = Limit;
             _manager.LimitType = (int)Type;
         }
-        else if (level == 0)
-        {
-            SplashScreen.SetActive(false);
-        }
+        if (!GPGController.IsAuthenticated())
+            GPGController.LoginToGPG();
+        UsernameText.text = GPGController.GetUsername();
     }
 
-    private void BannerView_OnAdLoaded(object sender, EventArgs e)
+    public void RequestVideo()
     {
-        bannerView.IsLoaded = true;
+        AdController.ShowVideo();
     }
 
-    private void RequestBanner()
+    public void ShowAchievements()
     {
-#if UNITY_ANDROID
-        //string adUnitId = ProjectConstants.UnityAdId;
-        string adUnitId = ProjectConstants.TestAdId; //ALWAYS test with TEST apps
-#endif
-        // Create a 320x50 banner at the top of the screen.
-        bannerView = new BannerView(adUnitId, AdSize.Banner, AdPosition.Top);
-
-        // Create an empty ad request.
-        AdRequest request = new AdRequest.Builder().Build();
-
-        // Load the banner with the request.
-        bannerView.LoadAd(request);
-    }
-
-    public void PlaySound()
-    {
-        GetComponent<AudioSource>().Play();
+        GPGController.ShowAchievements();
     }
 
     public void LoadLevel()
@@ -85,13 +105,13 @@ public class LevelManager : MonoBehaviour
 
     private void LoadLevel(string level)
     {
-        bannerView.Destroy();
+        AdController.DestroyAds();
         SceneManager.LoadScene(level, LoadSceneMode.Single);
     }
 
     public void SetLimit(int value)
     {
-        if(Limit + value > 0)
+        if (Limit + value > 0)
             Limit += value;
         int type = (int)Type;
         switch (type)
@@ -137,13 +157,6 @@ public class LevelManager : MonoBehaviour
     public void LoadLevelWithoutBanner(string level)
     {
         SceneManager.LoadSceneAsync(level);
-    }
-
-    private IEnumerator Load()
-    {
-        yield return new WaitForSeconds(2);
-        
-        SplashScreen.SetActive(false);
     }
 
     public void ExitGame()

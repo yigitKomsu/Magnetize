@@ -50,9 +50,9 @@ public class Number : MonoBehaviour
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
-        _turnManager = TurnManager.Manager;
-        _soundManager = SoundManager.Manager;
-        _manager = GameManager.Manager;
+        _turnManager = TurnManager.GetTurnManager;
+        _soundManager = SoundManager.GetSoundManager;
+        _manager = GameManager.GetGameManager;
         _myTransform = transform;
         StartPos = _myTransform.position;
     }
@@ -99,8 +99,7 @@ public class Number : MonoBehaviour
     {
         _colliding = null;
     }
-
-    //Optimize this
+    
     private void OnMouseDown()
     {
         if (TurnNumber == _turnManager.TurnNumber)
@@ -125,12 +124,13 @@ public class Number : MonoBehaviour
         }
         else if (Dropped)
         {
-            _manager.SpawnCard(MyNumber, StartPos, TurnNumber);
             _myTransform.SetParent(_colliding);
             _myTransform.localPosition = Vector3.zero;
             _myTransform.localScale *= 0.85f;
             _manager.UpdateMatrix(Mathf.RoundToInt(_colliding.position.x + 2),
                 Mathf.RoundToInt(_colliding.position.y + 2), this);
+            _manager.SpawnCard(MyNumber, StartPos, TurnNumber);
+            sr.sortingOrder = 0;
         }
         _soundManager.DropNumber();
     }

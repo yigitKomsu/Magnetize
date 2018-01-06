@@ -3,7 +3,7 @@
 public class TurnManager : MonoBehaviour
 {
     public int TurnNumber;
-    public static TurnManager Manager;
+    public static TurnManager GetTurnManager { get; private set; }
     [SerializeField]
     private Animator[] _animator;
     [SerializeField]
@@ -11,27 +11,20 @@ public class TurnManager : MonoBehaviour
     public bool timeOut;
     private void Awake()
     {
-        Manager = this;
+        GetTurnManager = this;
     }
 
     // Use this for initialization
     void Start()
     {
         _animator[TurnNumber - 1].SetTrigger("StartTurn");
-        if (GameManager.Manager.LimitType == (int)LimitTypes.Time)
+        if (GameManager.GetGameManager.LimitType == (int)LimitTypes.Time)
         {
-            Timer[0].Init(GameManager.Manager.Limit, 0);
-            Timer[1].Init(GameManager.Manager.Limit, 1);
+            Timer[0].Init(GameManager.GetGameManager.Limit, 0);
+            Timer[1].Init(GameManager.GetGameManager.Limit, 1);
             Timer[TurnNumber - 1].StartTimer();
-            SoundManager.Manager.StartTimer();
-        }
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+            SoundManager.GetSoundManager.StartTimer();
+        }        
     }
 
     public void AddTime(int time, int turn)
@@ -43,7 +36,7 @@ public class TurnManager : MonoBehaviour
     {
         if (timeOut)
             return;
-        if (GameManager.Manager.LimitType == (int)LimitTypes.Time)
+        if (GameManager.GetGameManager.LimitType == (int)LimitTypes.Time)
             Timer[TurnNumber - 1].StopTimer();
         _animator[TurnNumber - 1].SetTrigger("StopTurn");
         if (TurnNumber == 1)
@@ -55,10 +48,15 @@ public class TurnManager : MonoBehaviour
             TurnNumber = 1;
         }
         _animator[TurnNumber - 1].SetTrigger("StartTurn");
-        if (GameManager.Manager.LimitType == (int)LimitTypes.Time)
+        if (GameManager.GetGameManager.LimitType == (int)LimitTypes.Time)
             Timer[TurnNumber - 1].StartTimer();
     }
 
+    public void ShowPanels()
+    {
+        _animator[0].SetTrigger("StartTurn");
+        _animator[1].SetTrigger("StartTurn");
+    }
     public int GetRemainingTime(int TurnIndex)
     {
         return Timer[TurnIndex].PlayerTime;

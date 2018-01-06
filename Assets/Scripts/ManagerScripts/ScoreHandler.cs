@@ -9,10 +9,6 @@ public class ScoreHandler : MonoBehaviour
     private Text _messageText;
     [SerializeField]
     private Image _pieceLimit;
-    [SerializeField]
-    private Animator _animator;
-    [SerializeField]
-    private Animator[] _plusTextAnimator;
     public Transform Magnet;
     public int Charge;
     private float limitPerc;
@@ -29,15 +25,17 @@ public class ScoreHandler : MonoBehaviour
     {
         if (Charge - value > 0)
             Charge -= value;
+        else if (Charge - value >= GameManager.GetGameManager.Limit)
+        {
+            Charge = GameManager.GetGameManager.Limit;
+        }
         else
         {
             Charge = 0;
             _pieceLimit.rectTransform.sizeDelta = new Vector2(64, 0);
-            GameManager.Manager.FinishGame();
+            GameManager.GetGameManager.FinishGame();
             return;
         }
-
-
         _pieceLimit.rectTransform.sizeDelta = new Vector2(64, height - (limitPerc * value));
         height -= (limitPerc * value);
     }
@@ -54,9 +52,9 @@ public class ScoreHandler : MonoBehaviour
 
     public void Scored(int number)
     {
-        //_animator.SetTrigger("ScoreTrigger");
+        if (GameManager.GetGameManager.LimitType == (int)LimitTypes.Charge)
+            UpdateCharge(0);
         Score += number + 1;
-        //_plusTextAnimator[number].SetTrigger("FadeTrigger");
     }
 
     public void PrintScore()

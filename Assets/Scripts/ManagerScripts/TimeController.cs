@@ -14,8 +14,8 @@ public class TimeController : MonoBehaviour
 
     private void Start()
     {
-        _manager = GameManager.Manager;
-        _turnManager = TurnManager.Manager;
+        _manager = GameManager.GetGameManager;
+        _turnManager = TurnManager.GetTurnManager;
     }
 
     public void Init(int _limit, int turnNumber)
@@ -54,10 +54,11 @@ public class TimeController : MonoBehaviour
                 {
                     StopTimer();
                     _manager.FinishGame();
+                    return;
                 }
                 _turnManager.ChangeTurn();
                 _turnManager.timeOut = true;
-                _manager.PrintMessageToTurnField();
+                _manager.PrintMessageToTurnField("OVERTIME");
                 FinishGame();
             }
         }

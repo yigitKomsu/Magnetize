@@ -2,8 +2,8 @@
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
-{    
-    public static GameManager Manager;
+{
+    public static GameManager GetGameManager { get; private set; }
     private SoundManager _soundManager;
     private TurnManager _turnManager;
     [SerializeField]
@@ -20,43 +20,36 @@ public class GameManager : MonoBehaviour
     public bool scored;
     private Transform flyPosition;
 
-    IEnumerator WaitRoutine(int turn)
-    {
-        yield return new WaitForSeconds(1);
-        UpdateText(turn);
-        StopCoroutine(WaitRoutine(turn));
-    }
-
     private void Awake()
     {
-        Manager = this;
+        GetGameManager = this;
     }
 
     private void OnLevelWasLoaded(int level)
     {
-        LimitType = (int)LevelManager.Manager.Type;
-        Limit = LevelManager.Manager.Limit;
+        LimitType = (int)LevelManager.GetLevelManager.Type;
+        Limit = LevelManager.GetLevelManager.Limit;
     }
 
     // Use this for initialization
     void Start()
     {
-        _turnManager = TurnManager.Manager;
-        _soundManager = SoundManager.Manager;
-        scored = false;       
+        _turnManager = TurnManager.GetTurnManager;
+        _soundManager = SoundManager.GetSoundManager;
+        scored = false;
 
-        SetGame();        
+        SetGame();
     }
-    
+
     public void RefillPower(int value, int target)
     {
         switch (LimitType)
         {
             case (int)LimitTypes.Time:
-                _turnManager.AddTime(value, target);
+                _turnManager.AddTime(value * 2, target);
                 break;
             case (int)LimitTypes.Score:
-                ScoreObject[target].Score += value;
+                ScoreObject[target].Score += value * 2;
                 break;
             case (int)LimitTypes.Charge:
                 ScoreObject[target].UpdateCharge(-value * 4);
@@ -67,14 +60,15 @@ public class GameManager : MonoBehaviour
     }
 
     public void FinishGame()
-    {        
+    {
         CompareScores();
         BoardHandler.ClearTheBoard();
+        StopAllCoroutines();
     }
-    
-    public void PrintMessageToTurnField()
+
+    public void PrintMessageToTurnField(string message)
     {
-        ScoreObject[_turnManager.TurnNumber - 1].PrintToTurnField("OVERTIME");
+        ScoreObject[_turnManager.TurnNumber - 1].PrintToTurnField(message);
     }
 
     public void DestroyedNumber(int number, int whose)
@@ -84,11 +78,11 @@ public class GameManager : MonoBehaviour
         if (LimitType == (int)LimitTypes.Score)
             ControlForScore();
     }
-    
+
     public void ReturnToMenu()
     {
-        LevelManager.Manager.LoadLevelWithoutBanner(ProjectConstants.MainMenu);
-        Destroy(LevelManager.Manager.gameObject);
+        LevelManager.GetLevelManager.LoadLevelWithoutBanner(ProjectConstants.MainMenu);
+        Destroy(LevelManager.GetLevelManager.gameObject);
     }
 
     public void SpawnCard(int number, Vector2 pos, int TurnNumber)
@@ -96,18 +90,18 @@ public class GameManager : MonoBehaviour
         var obj = Instantiate(NumberBox, pos, Quaternion.identity);
         int newCardNumber = GetNewNumber(number); //yeni eklenen sayıyı eklemeyi unutma
         obj.GetComponent<Number>().TurnNumber = TurnNumber;
-        obj.GetComponent<Number>().MyNumber = newCardNumber + 1;        
+        obj.GetComponent<Number>().MyNumber = newCardNumber + 1;
         obj.GetComponent<SpriteRenderer>().sprite = Numbers[newCardNumber];
-        if (LimitType == (int)LimitTypes.Charge && ScoreObject[TurnNumber - 1].Charge > 0)
+        if (LimitType == (int)LimitTypes.Charge && ScoreObject[TurnNumber - 1].Charge >= 0)
         {
             ScoreObject[TurnNumber - 1].UpdateCharge(newCardNumber + 1);
         }
     }
-    
+
     public void UpdateMatrix(int pos_x, int pos_y, Number card)
     {
         BoardHandler.GameBoardMatrix.row[pos_y].column[pos_x] = card;
-        BoardHandler.GivePower(pos_x, pos_y, card);        
+        BoardHandler.GivePower(pos_x, pos_y, card);
         ControlMatrix(pos_x, pos_y, card.MyNumber);
     }
 
@@ -119,7 +113,6 @@ public class GameManager : MonoBehaviour
             ScoreObject[0].UpdateCharge(0);
             ScoreObject[1].UpdateCharge(0);
         }
-        StartCoroutine(WaitRoutine(_turnManager.TurnNumber - 1));
         BoardHandler.SumTheBoard();
     }
 
@@ -153,26 +146,27 @@ public class GameManager : MonoBehaviour
         StopAllCoroutines();
         if (winnerIndex > 1 || winnerIndex < 0)
         {
-            ScoreObject[0].PrintToScoreField(ProjectConstants.TiedText);
-            ScoreObject[1].PrintToScoreField(ProjectConstants.TiedText);
+            ScoreObject[0].PrintToTurnField(ProjectConstants.TiedText);
+            ScoreObject[1].PrintToTurnField(ProjectConstants.TiedText);
+            _turnManager.ShowPanels();
             return;
         }
 
-        ScoreObject[winnerIndex].PrintToScoreField(ProjectConstants.WinText);
+        ScoreObject[winnerIndex].PrintToTurnField(ProjectConstants.WinText);
         if (winnerIndex == 0)
         {
-            ScoreObject[1].PrintToScoreField(ProjectConstants.LoseText);
+            ScoreObject[1].PrintToTurnField(ProjectConstants.LoseText);
         }
         else if (winnerIndex == 1)
         {
-            ScoreObject[0].PrintToScoreField(ProjectConstants.LoseText);
+            ScoreObject[0].PrintToTurnField(ProjectConstants.LoseText);
         }
+        _turnManager.ShowPanels();
         _soundManager.StopLoop();
     }
 
     private void CompareScores()
     {
-
         if (LimitType == (int)LimitTypes.Charge)
         {
             ScoreObject[0].Score += ScoreObject[0].Charge;
@@ -197,7 +191,6 @@ public class GameManager : MonoBehaviour
         _turnManager.ChangeTurn();
         flyPosition = ScoreObject[_turnManager.TurnNumber - 1].Magnet;
         BoardHandler.flyPosition = flyPosition;
-        StartCoroutine(WaitRoutine(_turnManager.TurnNumber - 1));
     }
 
     private void ControlMatrix(int column, int row, int cardNumber)

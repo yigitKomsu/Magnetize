@@ -10,9 +10,13 @@ public class ProjectConstants
 
     public const string MainMenu = "MainMenu";
     public const string CouchPlay = "CouchPlay";
+    public const string Tutorial = "Tutorial";
 
-    public const string UnityAdId = "ca-app-pub-9092467960609637/7412064397";
-    public const string TestAdId = "ca-app-pub-3940256099942544/6300978111";
+    public const string AppId = "ca-app-pub-9092467960609637~5369739817";
+    public const string BannerAdId = "ca-app-pub-9092467960609637/7045783564";
+    public const string TestBannerAdId = "ca-app-pub-3940256099942544/6300978111";
+    public const string VideoAdId = "ca-app-pub-9092467960609637/2061050197";
+    public const string TestVideoAdId = "ca-app-pub-3940256099942544/5224354917";   
 
     public static int PlayerOne = 0;
     public static int PlayerTwo = 1;

@@ -13,7 +13,7 @@ public class MenuItem : MonoBehaviour {
 
     public void SendLimitValue(LimitTypes Type)
     {
-        LevelManager.Manager.Limit = Limit;
-        LevelManager.Manager.Type = Type;
+        LevelManager.GetLevelManager.Limit = Limit;
+        LevelManager.GetLevelManager.Type = Type;
     }
 }

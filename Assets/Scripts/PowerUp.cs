@@ -1,14 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-
-
 public class PowerUp : MonoBehaviour {
 
     private PowerType powerType;
     [SerializeField]
     private Sprite[] powerSprites;
-
     private void Start()
     {
         var sr = GetComponent<SpriteRenderer>();

@@ -9,14 +9,12 @@ public class GameBoardHandler : MonoBehaviour
     public Transform flyPosition;
     public int sum;
     [SerializeField]
-    private Text[] TotalText;
-    [SerializeField]
     private GameObject PowerUp;
     private TurnManager _turnManager;
     // Use this for initialization
     void Start()
     {
-        _turnManager = TurnManager.Manager;
+        _turnManager = TurnManager.GetTurnManager;
         ReturnButton.SetActive(false);
     }
 
@@ -195,7 +193,6 @@ public class GameBoardHandler : MonoBehaviour
         float perc = Random.Range(0, 99);
         if (perc > 60 && !CheckBoardFull())
         {
-            //Spawn a PowerUp object at a random at an EMPTY position
             int rand_x = Random.Range(-2, 2);
             int rand_y = Random.Range(-2, 2);
             if (!GameBoardMatrix.row[rand_y + 2].column[rand_x + 2] && !GameBoardMatrix.row[rand_y + 2].pColumn[rand_x + 2])
@@ -271,7 +268,6 @@ public class GameBoardHandler : MonoBehaviour
 
     public void ClearTheBoard()
     {
-        //var numbers = FindObjectsOfType<Number>();
         foreach (var item in GameBoardMatrix.row)
         {
             foreach (var a in item.column)
@@ -280,8 +276,6 @@ public class GameBoardHandler : MonoBehaviour
                     Destroy(a.gameObject);
             }
         }
-        ReturnButton.SetActive(true);
-        SumTheBoard();
         foreach (var item in GameBoardMatrix.row)
         {
             foreach (var a in item.pColumn)
@@ -290,6 +284,8 @@ public class GameBoardHandler : MonoBehaviour
                     Destroy(a.gameObject);
             }
         }
+        ReturnButton.SetActive(true);
+        SumTheBoard();        
     }
 
     public int SumTheBoard(int number = 0)
@@ -304,7 +300,6 @@ public class GameBoardHandler : MonoBehaviour
             }
         }
         sum += number;
-        TotalText[0].text = TotalText[1].text = sum.ToString("00");
         return sum;
     }
 }

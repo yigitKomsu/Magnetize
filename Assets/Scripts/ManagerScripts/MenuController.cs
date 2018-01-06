@@ -18,8 +18,8 @@ public class MenuController : MonoBehaviour
 
     public void ChangeLimit(int value)
     {
-        LevelManager.Manager.SetLimit(value);
-        limitText[index].text = LevelManager.Manager.Limit.ToString("000");
+        LevelManager.GetLevelManager.SetLimit(value);
+        limitText[index].text = LevelManager.GetLevelManager.Limit.ToString("000");
     }
 
     private void Update()
@@ -39,8 +39,8 @@ public class MenuController : MonoBehaviour
                     index = Menu.GetInteger("MenuIndex");
                     if (index < 2) index++;
                     Menu.SetInteger("MenuIndex", index);                    
-                    LevelManager.Manager.SetType(index);
-                    limitText[index].text = LevelManager.Manager.Limit.ToString("000");
+                    LevelManager.GetLevelManager.SetType(index);
+                    limitText[index].text = LevelManager.GetLevelManager.Limit.ToString("000");
                     slid = true;
                 }
                 else if (touchdeltaPosition.x < touchStartPosition.x - 100)
@@ -48,9 +48,9 @@ public class MenuController : MonoBehaviour
                     Debug.Log("Slided left");
                     index = Menu.GetInteger("MenuIndex");
                     if (index > 0) index--;
-                    LevelManager.Manager.SetType(index);
+                    LevelManager.GetLevelManager.SetType(index);
                     Menu.SetInteger("MenuIndex", index);
-                    limitText[index].text = LevelManager.Manager.Limit.ToString("000");
+                    limitText[index].text = LevelManager.GetLevelManager.Limit.ToString("000");
                     slid = true;
                 }
             }
