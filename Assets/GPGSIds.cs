@@ -24,21 +24,23 @@
 
 public static class GPGSIds
 {
-        public const string achievement_3 = "CgkIqPap-MAGEAIQEA"; // <GPGSID>
-        public const string achievement_4 = "CgkIqPap-MAGEAIQEQ"; // <GPGSID>
-        public const string achievement_5 = "CgkIqPap-MAGEAIQEw"; // <GPGSID>
+        public const string achievement_scoring_up = "CgkIqPap-MAGEAIQDQ"; // <GPGSID>
+        public const string achievement_unlimited_power = "CgkIqPap-MAGEAIQHg"; // <GPGSID>
         public const string achievement_gamer = "CgkIqPap-MAGEAIQEg"; // <GPGSID>
         public const string achievement_welcome = "CgkIqPap-MAGEAIQDA"; // <GPGSID>
         public const string achievement_pathetic = "CgkIqPap-MAGEAIQFQ"; // <GPGSID>
-        public const string achievement_magnetize = "CgkIqPap-MAGEAIQCw"; // <GPGSID>
-        public const string achievement_a_win_against_time = "CgkIqPap-MAGEAIQDw"; // <GPGSID>
-        public const string achievement_loser = "CgkIqPap-MAGEAIQFA"; // <GPGSID>
-        public const string achievement_champion_of_the_internet = "CgkIqPap-MAGEAIQFw"; // <GPGSID>
-        public const string achievement_winner = "CgkIqPap-MAGEAIQGA"; // <GPGSID>
-        public const string achievement_champion = "CgkIqPap-MAGEAIQGQ"; // <GPGSID>
         public const string achievement_winner_of_the_internet = "CgkIqPap-MAGEAIQFg"; // <GPGSID>
-        public const string achievement_1 = "CgkIqPap-MAGEAIQDQ"; // <GPGSID>
-        public const string achievement_2 = "CgkIqPap-MAGEAIQDg"; // <GPGSID>
+        public const string achievement_a_fine_addition = "CgkIqPap-MAGEAIQHw"; // <GPGSID>
+        public const string achievement_loser = "CgkIqPap-MAGEAIQFA"; // <GPGSID>
+        public const string achievement_attractive_gameplay = "CgkIqPap-MAGEAIQCw"; // <GPGSID>
+        public const string achievement_whole_row = "CgkIqPap-MAGEAIQHA"; // <GPGSID>
+        public const string achievement_magnetize = "CgkIqPap-MAGEAIQHQ"; // <GPGSID>
+        public const string achievement_champion_of_the_internet = "CgkIqPap-MAGEAIQFw"; // <GPGSID>
+        public const string achievement_durable_batteries = "CgkIqPap-MAGEAIQEA"; // <GPGSID>
+        public const string achievement_power = "CgkIqPap-MAGEAIQGw"; // <GPGSID>
+        public const string achievement_ahead_of_time = "CgkIqPap-MAGEAIQDw"; // <GPGSID>
+        public const string achievement_opportunist = "CgkIqPap-MAGEAIQGg"; // <GPGSID>
+        public const string achievement_esports_player = "CgkIqPap-MAGEAIQEw"; // <GPGSID>
 
 }
 

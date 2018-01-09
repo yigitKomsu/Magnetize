@@ -97,7 +97,7 @@ public class LevelManager : MonoBehaviour
         GPGController.ShowAchievements();
     }
 
-    public void LoadLevel()
+    public void LoadLocalGame()
     {
         DontDestroyOnLoad(gameObject);
         LoadLevel(ProjectConstants.CouchPlay);
