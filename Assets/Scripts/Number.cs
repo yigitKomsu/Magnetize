@@ -17,6 +17,7 @@ public class Number : MonoBehaviour
     public bool isMagnetized;
     private bool isRefill;
     private SpriteRenderer sr;
+    private GameObject DoorObject;
 
     IEnumerator WaitRoutine(Transform target)
     {
@@ -49,6 +50,7 @@ public class Number : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        transform.GetChild(0).parent = null;
         sr = GetComponent<SpriteRenderer>();
         _turnManager = TurnManager.GetTurnManager;
         _soundManager = SoundManager.GetSoundManager;
@@ -66,7 +68,7 @@ public class Number : MonoBehaviour
 
     public void Fly(Transform target)
     {
-        _myTransform.SetParent(target);
+        transform.parent = null;
         StartCoroutine(WaitRoutine(target));
     }
 
