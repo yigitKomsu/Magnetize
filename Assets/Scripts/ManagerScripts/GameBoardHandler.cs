@@ -191,10 +191,15 @@ public class GameBoardHandler : MonoBehaviour
     private void SpawnPowerUp()
     {
         float perc = Random.Range(0, 99);
+        //if the device owner player, transmit the perc to the other user intead of randomly generating
         if (perc > 60 && !CheckBoardFull())
         {
             int rand_x = Random.Range(-2, 2);
+            //if the device owner player, transmit the rand_x to the other user intead of randomly generating
+
             int rand_y = Random.Range(-2, 2);
+            //if the device owner player, transmit the rand_y to the other user intead of randomly generating
+
             if (!GameBoardMatrix.row[rand_y + 2].column[rand_x + 2] && !GameBoardMatrix.row[rand_y + 2].pColumn[rand_x + 2])
             {
                 var up = Instantiate(PowerUp, transform);
@@ -202,9 +207,7 @@ public class GameBoardHandler : MonoBehaviour
                 GameBoardMatrix.row[rand_y + 2].pColumn[rand_x + 2] = up.GetComponent<PowerUp>();
             }
         }
-    }
-
-  
+    } 
 
     public void MagnetizeRow(int? row, int? col)
     {

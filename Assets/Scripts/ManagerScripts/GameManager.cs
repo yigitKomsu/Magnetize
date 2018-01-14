@@ -100,6 +100,7 @@ public class GameManager : MonoBehaviour
 
     public void UpdateMatrix(int pos_x, int pos_y, Number card)
     {
+        //Post this information to the connected participant for update        
         BoardHandler.GameBoardMatrix.row[pos_y].column[pos_x] = card;
         BoardHandler.GivePower(pos_x, pos_y, card);
         ControlMatrix(pos_x, pos_y, card.MyNumber);

@@ -7,11 +7,11 @@ public class LevelManager : MonoBehaviour
 
     public static LevelManager GetLevelManager { get; private set; }
     [SerializeField]
-    private GameObject SplashScreen;
+    private GameObject OnlineStatusPanel;
     [SerializeField]
     private GameObject MenuButtonPanel;
     [SerializeField]
-    private Text UsernameText;
+    private Text UsernameText, OnlineStatusText;
     private GameManager _manager;
     public int Limit;
     public LimitTypes Type;
@@ -24,12 +24,29 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        OnlineStatusPanel.SetActive(false);
         AdController.ConnectAds();
         if (!GPGController.IsAuthenticated())
             GPGController.LoginToGPG();
         Limit = timeLimit = scoreLimit = pieceLimit = 30;
         if (GetLevelManager == null) GetLevelManager = this;
         SetDevicePrefs();
+    }
+
+    public void WaitingRoomClose()
+    {
+        GPGController.LeaveRoom();
+        //Button kodu
+    }
+
+    public void WaitingPanelClosed()
+    {
+        OnlineStatusPanel.SetActive(false);
+    }
+
+    public void UpdateOnlineStatusText(string text)
+    {
+        OnlineStatusText.text = text;
     }
 
     public void UpdateUsernameText(string name)
@@ -89,23 +106,29 @@ public class LevelManager : MonoBehaviour
 
     public void RequestVideo()
     {
-        AdController.ShowVideo();
+        AdController.ShowVideo(); //Button kodu
     }
 
     public void ShowAchievements()
     {
-        GPGController.ShowAchievements();
+        GPGController.ShowAchievements(); //Button kodu
+    }
+
+    public void LoadOnlineGame(int type)
+    {
+        GPGController.GpgController.CreateOrJoinQuickMatch(type); //Button kodu
+        OnlineStatusPanel.SetActive(true);
     }
 
     public void LoadLocalGame()
     {
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject); //Button kodu
         LoadLevel(ProjectConstants.CouchPlay);
     }
 
     private void LoadLevel(string level)
     {
-        AdController.DestroyAds();
+        AdController.DestroyAds(); //Button kodu
         SceneManager.LoadScene(level, LoadSceneMode.Single);
     }
 
