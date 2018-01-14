@@ -18,6 +18,8 @@ public class GPGController : RealTimeMultiplayerListener
 
     public Player player_one, player_two;
 
+    private static int cost;
+
     public static void LoginToGPG()
     {
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().Build();
@@ -32,7 +34,7 @@ public class GPGController : RealTimeMultiplayerListener
         var platformInstance = PlayGamesPlatform.Instance;
         if (!platformInstance.localUser.authenticated)
         {
-            platformInstance.Authenticate(success => { LevelManager.GetLevelManager.UpdateUsernameText(GetUsername()); });
+            platformInstance.Authenticate(success => { });
         }
     }
 
@@ -61,17 +63,36 @@ public class GPGController : RealTimeMultiplayerListener
         return PlayGamesPlatform.Instance.localUser.userName;
     }
 
+    public static void WinGame()
+    {
+        ProjectConstants.UpdateUserCredit(cost);
+    }
+
+    public static void LoseGame()
+    {
+        ProjectConstants.UpdateUserCredit(-cost);
+    }
+
     public void CreateOrJoinQuickMatch(int type)
     {
+        cost = 100;
         try
         {
-            LevelManager.GetLevelManager.UpdateOnlineStatusText("CONNECTING");
-            const int MinOpponents = 1, MaxOpponents = 1;
-            PlayGamesPlatform.Instance.RealTime.CreateQuickGame(MinOpponents, MaxOpponents,
-                        (uint)type, this);
+            if (ProjectConstants.UpdateUserCredit(-cost))
+            {
+                LevelManager.GetLevelManager.UpdateOnlineStatusText("CONNECTING");
+                const int MinOpponents = 1, MaxOpponents = 1;
+                PlayGamesPlatform.Instance.RealTime.CreateQuickGame(MinOpponents, MaxOpponents,
+                            (uint)type, this);
+            }
+            else
+            {
+                //NOT ENOUGH COINS!!
+            }
         }
         catch (Exception ex)
         {
+            ProjectConstants.UpdateUserCredit(cost);
             LevelManager.GetLevelManager.UpdateOnlineStatusText(ex.Message);
         }
     }
@@ -85,6 +106,7 @@ public class GPGController : RealTimeMultiplayerListener
     {
         PlayGamesPlatform.Instance.RealTime.LeaveRoom();
         LevelManager.GetLevelManager.UpdateOnlineStatusText("CANCELLING");
+        ProjectConstants.UpdateUserCredit(cost);
     }
 
     public void OnRoomConnected(bool success)
@@ -107,6 +129,7 @@ public class GPGController : RealTimeMultiplayerListener
         else
         {
             LevelManager.GetLevelManager.UpdateOnlineStatusText("FAILED TO CONNECT");
+            ProjectConstants.UpdateUserCredit(cost);
             PlayGamesPlatform.Instance.RealTime.LeaveRoom();
         }
     }

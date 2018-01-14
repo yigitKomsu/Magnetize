@@ -21,6 +21,18 @@ public class ProjectConstants
     public static int PlayerOne = 0;
     public static int PlayerTwo = 1;
     public static int Noone = 2;
+
+    public static bool UpdateUserCredit(int value)
+    {
+        int currentCredit = UnityEngine.PlayerPrefs.GetInt("Credit");
+        currentCredit += value;
+        if(currentCredit < 0)
+        {
+            return false;
+        }
+        UnityEngine.PlayerPrefs.SetInt("Credit", currentCredit);
+        return true;
+    }
 }
 
 public enum PowerType

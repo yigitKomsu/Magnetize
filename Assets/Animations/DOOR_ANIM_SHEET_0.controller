@@ -81,7 +81,7 @@ AnimatorState:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Door_Close
-  m_Speed: -1
+  m_Speed: -1.8
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101228225649774678}
@@ -133,7 +133,7 @@ AnimatorState:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Door_Open
-  m_Speed: 1.4
+  m_Speed: 1.8
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101390491454922936}
@@ -165,10 +165,10 @@ AnimatorStateMachine:
     m_Position: {x: 200, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102081927232926258}
-    m_Position: {x: 420, y: 108, z: 0}
+    m_Position: {x: 252, y: 120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102418139289423468}
-    m_Position: {x: 540, y: 216, z: 0}
+    m_Position: {x: 240, y: 264, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

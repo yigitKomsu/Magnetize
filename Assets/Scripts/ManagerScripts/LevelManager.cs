@@ -11,7 +11,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private GameObject MenuButtonPanel;
     [SerializeField]
-    private Text UsernameText, OnlineStatusText;
+    private Text OnlineStatusText;
     private GameManager _manager;
     public int Limit;
     public LimitTypes Type;
@@ -48,11 +48,7 @@ public class LevelManager : MonoBehaviour
     {
         OnlineStatusText.text = text;
     }
-
-    public void UpdateUsernameText(string name)
-    {
-        UsernameText.text = name;
-    }
+    
     public void MuteOrUnmute()
     {
         if (PlayerPrefs.GetInt("Muted") == 0)
@@ -101,7 +97,6 @@ public class LevelManager : MonoBehaviour
         }
         if (!GPGController.IsAuthenticated())
             GPGController.LoginToGPG();
-        UsernameText.text = GPGController.GetUsername();
     }
 
     public void RequestVideo()

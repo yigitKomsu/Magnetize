@@ -57,9 +57,11 @@ public class AdController
         videoAd.OnAdRewarded += HandleVideoReward;
     }
 
-    private static void HandleVideoReward(object sender, Reward e)
+    private static void HandleVideoReward(object sender, Reward reward)
     {
-        //Get the reward here
+        UnityEngine.Debug.Log("Reward received: " + reward.Type + " " + reward.Amount
+             + " from" + sender.ToString());
+        ProjectConstants.UpdateUserCredit((int)reward.Amount);
     }
 
 }
