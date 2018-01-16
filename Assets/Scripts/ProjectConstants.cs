@@ -1,6 +1,16 @@
-﻿
+﻿using UnityEngine;
+
 public class ProjectConstants
 {
+    public const string dropAndSpawnNumber = "numberdrop";
+    public const string scoreNumber = "scorenumber";
+    public const string updateScore = "updatescore";
+    public const string updateCharge = "updatecharge";
+    public const string updateTime = "updatetime";
+    public const string bet = "bet";
+    public const string call = "call";
+    public const string satisfied = "satisfied";
+
     public const string WinText = "YOU WIN";
     public const string LoseText = "YOU LOSE";
     public const string TiedText = "TIED";
@@ -22,16 +32,41 @@ public class ProjectConstants
     public static int PlayerTwo = 1;
     public static int Noone = 2;
 
+    private static int userCredit;
+    public static int tempUserCredit;
+    public static int betAmount;
+
     public static bool UpdateUserCredit(int value)
     {
-        int currentCredit = UnityEngine.PlayerPrefs.GetInt("Credit");
+        int currentCredit = userCredit = PlayerPrefs.GetInt("Credit");
         currentCredit += value;
         if(currentCredit < 0)
         {
             return false;
         }
-        UnityEngine.PlayerPrefs.SetInt("Credit", currentCredit);
+        PlayerPrefs.SetInt("Credit", currentCredit);
+        Debug.Log("User credits: " + currentCredit);
         return true;
+    }
+
+    public static bool Bet(int value)
+    {
+        userCredit = PlayerPrefs.GetInt("Credit");
+        if (tempUserCredit == 0) tempUserCredit = userCredit;
+
+        if ((tempUserCredit -= value) > 0)
+        {
+            betAmount += value;
+            return true;
+        }
+
+        return false;
+    }
+
+    public static void RestoreUserCredit()
+    {
+        PlayerPrefs.SetInt("Credit", userCredit);
+        Debug.Log("User credits: " + userCredit);
     }
 }
 

@@ -18,7 +18,7 @@ public class GPGController : RealTimeMultiplayerListener
 
     public Player player_one, player_two;
 
-    private static int cost;
+    public static int matchCost; //half of total bet
 
     public static void LoginToGPG()
     {
@@ -32,9 +32,9 @@ public class GPGController : RealTimeMultiplayerListener
     private static void Login()
     {
         var platformInstance = PlayGamesPlatform.Instance;
-        if (!platformInstance.localUser.authenticated)
+        if (!IsAuthenticated())
         {
-            platformInstance.Authenticate(success => { });
+            platformInstance.Authenticate(success => { Debug.Log("Logged in to Google Play Services!"); });
         }
     }
 
@@ -65,34 +65,28 @@ public class GPGController : RealTimeMultiplayerListener
 
     public static void WinGame()
     {
-        ProjectConstants.UpdateUserCredit(cost);
+        ProjectConstants.UpdateUserCredit(matchCost);
     }
 
     public static void LoseGame()
     {
-        ProjectConstants.UpdateUserCredit(-cost);
+        ProjectConstants.UpdateUserCredit(-matchCost);
     }
 
     public void CreateOrJoinQuickMatch(int type)
     {
-        cost = 100;
+        if (!IsAuthenticated())
+            return;
         try
         {
-            if (ProjectConstants.UpdateUserCredit(-cost))
-            {
-                LevelManager.GetLevelManager.UpdateOnlineStatusText("CONNECTING");
-                const int MinOpponents = 1, MaxOpponents = 1;
-                PlayGamesPlatform.Instance.RealTime.CreateQuickGame(MinOpponents, MaxOpponents,
-                            (uint)type, this);
-            }
-            else
-            {
-                //NOT ENOUGH COINS!!
-            }
+            LevelManager.GetLevelManager.UpdateOnlineStatusText("CONNECTING");
+            const int MinOpponents = 1, MaxOpponents = 1;
+            PlayGamesPlatform.Instance.RealTime.CreateQuickGame(MinOpponents, MaxOpponents,
+                        (uint)type, this);
         }
         catch (Exception ex)
         {
-            ProjectConstants.UpdateUserCredit(cost);
+            ProjectConstants.UpdateUserCredit(matchCost);
             LevelManager.GetLevelManager.UpdateOnlineStatusText(ex.Message);
         }
     }
@@ -106,7 +100,26 @@ public class GPGController : RealTimeMultiplayerListener
     {
         PlayGamesPlatform.Instance.RealTime.LeaveRoom();
         LevelManager.GetLevelManager.UpdateOnlineStatusText("CANCELLING");
-        ProjectConstants.UpdateUserCredit(cost);
+    }
+
+    public static void SendByteMessage(byte[] data, string participantId)
+    {
+        PlayGamesPlatform.Instance.RealTime.SendMessage(true, participantId, data);
+    }
+
+    public static string GetOpponentId()
+    {
+        List<Participant> participants = PlayGamesPlatform.Instance.RealTime.GetConnectedParticipants();
+        string id = "";
+        foreach (var item in participants)
+        {
+            if(item.ParticipantId != PlayGamesPlatform.Instance.RealTime.GetSelf().ParticipantId)
+            {
+                id = item.ParticipantId;
+                break;
+            }
+        }
+        return id;
     }
 
     public void OnRoomConnected(bool success)
@@ -120,16 +133,19 @@ public class GPGController : RealTimeMultiplayerListener
             player_one.participant = participants[0];
             player_one.assignedTurnNumber = 1;
             player_one.isMyself = participants[0].ParticipantId == myself.ParticipantId;
+
+            Bet.myTurn = player_one.isMyself;
+
             player_two.participant = participants[1];
             player_two.assignedTurnNumber = 2;
             player_two.isMyself = participants[0].ParticipantId == myself.ParticipantId;
             Debug.Log(player_one);
             Debug.Log(player_two);
+            LevelManager.GetLevelManager.OpenBetPanel();
         }
         else
         {
             LevelManager.GetLevelManager.UpdateOnlineStatusText("FAILED TO CONNECT");
-            ProjectConstants.UpdateUserCredit(cost);
             PlayGamesPlatform.Instance.RealTime.LeaveRoom();
         }
     }
@@ -141,7 +157,8 @@ public class GPGController : RealTimeMultiplayerListener
 
     public void OnParticipantLeft(Participant participant)
     {
-        throw new NotImplementedException();
+        LevelManager.GetLevelManager.UpdateOnlineStatusText("PARTICIPANT LEFT");
+        PlayGamesPlatform.Instance.RealTime.LeaveRoom();
     }
 
     public void OnPeersConnected(string[] participantIds)
@@ -156,6 +173,9 @@ public class GPGController : RealTimeMultiplayerListener
 
     public void OnRealTimeMessageReceived(bool isReliable, string senderId, byte[] data)
     {
-        throw new NotImplementedException();
+        var message = GPGBytePackager.UnpackPackage(data);
+        Debug.Log("I received message from: " + senderId + " ");
+        GPGBytePackager.ProcessPackage(message);
+        
     }
 }

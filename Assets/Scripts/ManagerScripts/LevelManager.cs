@@ -7,15 +7,16 @@ public class LevelManager : MonoBehaviour
 
     public static LevelManager GetLevelManager { get; private set; }
     [SerializeField]
-    private GameObject OnlineStatusPanel;
+    private GameObject OnlineStatusPanel, BetPanel;
     [SerializeField]
     private GameObject MenuButtonPanel;
     [SerializeField]
-    private Text OnlineStatusText;
+    private Text OnlineStatusText, CurrentIncreaseText, CurrentBetText, NotificationText, RemainingCreditsTest;
     private GameManager _manager;
     public int Limit;
     public LimitTypes Type;
     private int timeLimit, scoreLimit, pieceLimit;
+    public int opponentBet;
 
     private void Awake()
     {
@@ -24,7 +25,9 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        CurrentBetText.text = "CURRENT BET: " + Bet.TotalBet.ToString();
         OnlineStatusPanel.SetActive(false);
+        BetPanel.SetActive(false);
         AdController.ConnectAds();
         if (!GPGController.IsAuthenticated())
             GPGController.LoginToGPG();
@@ -33,10 +36,20 @@ public class LevelManager : MonoBehaviour
         SetDevicePrefs();
     }
 
+    public void BetText()
+    {
+        CurrentBetText.text = "CURRENT BET: " + Bet.TotalBet.ToString();
+    }
+
     public void WaitingRoomClose()
     {
         GPGController.LeaveRoom();
         //Button kodu
+    }
+
+    public void OpenBetPanel()
+    {
+        BetPanel.SetActive(true);
     }
 
     public void WaitingPanelClosed()
@@ -44,11 +57,22 @@ public class LevelManager : MonoBehaviour
         OnlineStatusPanel.SetActive(false);
     }
 
+    public void Call()
+    {
+        Bet.Call();
+    }
+
+    public void CallAndIncrease(int amount)
+    {
+        Bet.CallAndIncrease(amount);
+    }
+
     public void UpdateOnlineStatusText(string text)
     {
+        Debug.Log(text);
         OnlineStatusText.text = text;
     }
-    
+
     public void MuteOrUnmute()
     {
         if (PlayerPrefs.GetInt("Muted") == 0)
@@ -113,7 +137,7 @@ public class LevelManager : MonoBehaviour
     {
         GPGController.GpgController.CreateOrJoinQuickMatch(type); //Button kodu
         OnlineStatusPanel.SetActive(true);
-    }
+    }    
 
     public void LoadLocalGame()
     {
