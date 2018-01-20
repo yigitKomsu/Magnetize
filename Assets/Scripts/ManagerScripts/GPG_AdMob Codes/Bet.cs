@@ -20,6 +20,8 @@
             };
             GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
                 GPGController.GetOpponentId());
+            LevelManager.GetLevelManager.BetEventText("You called " + TableBet);
+
             LevelManager.GetLevelManager.BetText();
             return TableBet;
         }
@@ -33,6 +35,7 @@
             };
             GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
                 GPGController.GetOpponentId());
+            LevelManager.GetLevelManager.BetEventText("You called " + TableBet);
             LevelManager.GetLevelManager.BetText();
             return difference;
         }
@@ -61,6 +64,7 @@
         };
         GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
             GPGController.GetOpponentId());
+        LevelManager.GetLevelManager.BetEventText("You called " + TableBet);
         LevelManager.GetLevelManager.BetText();
         return increaseAmount;
     }
@@ -70,6 +74,7 @@
         if (YourBet == 0 && OpBet == 0)
         {
             OpBet += TableBet;
+            LevelManager.GetLevelManager.BetEventText(GPGController.GetOpponentName() + " called " + TableBet);
             LevelManager.GetLevelManager.BetText();
             myTurn = true;
             return TableBet;
@@ -79,6 +84,8 @@
             int difference = YourBet - OpBet;
             OpBet += difference;
             LevelManager.GetLevelManager.BetText();
+            LevelManager.GetLevelManager.BetEventText(GPGController.GetOpponentName() + " called  " + difference);
+
             myTurn = true;
             if (IsSatisfied())
             {
@@ -88,28 +95,31 @@
                 };
                 GPGController.SendByteMessage(GPGBytePackager.CreatePackage(msg), GPGController.GetOpponentId());
                 UnityEngine.Debug.Log("Both devices are satisfied!!! Total bet is: " + Bet.TotalBet);
-                LevelManager.GetLevelManager.LoadLocalGame();
+                //LevelManager.GetLevelManager.LoadLocalGame();
             }
             return difference;
         }
-        
+
         return 0;
     }
 
     public static int OpCallAndIncrease(int increaseAmount)
     {
+        int difference = 0;
         if (OpBet == 0 && YourBet == 0)
         {
             OpBet += TableBet;
         }
         else if (OpBet < YourBet)
         {
-            int difference = YourBet - OpBet;
+            difference = YourBet - OpBet;
             OpBet += difference;
         }
         OpBet += increaseAmount;
         myTurn = true;
         LevelManager.GetLevelManager.BetText();
+        LevelManager.GetLevelManager.BetEventText(GPGController.GetOpponentName() +
+            " called " + difference + " and increased the bet by " + increaseAmount);
         return increaseAmount;
 
     }

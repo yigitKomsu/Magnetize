@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private ScoreHandler[] ScoreObject;
     [SerializeField]
-    public Sprite[] Numbers, Double, Magnetized, Refill;
+    public Sprite[] Numbers, Magnetized;
     [SerializeField]
     private GameObject NumberBox;
     [SerializeField]
@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour
 
     public void RefillPower(int value, int target)
     {
+        //_soundManager.PlayRefillScore();
+
         switch (LimitType)
         {
             case (int)LimitTypes.Time:
@@ -90,7 +92,6 @@ public class GameManager : MonoBehaviour
         int newCardNumber = GetNewNumber(number); //yeni eklenen sayıyı eklemeyi unutma
         obj.GetComponent<Number>().TurnNumber = TurnNumber;
         obj.GetComponent<Number>().MyNumber = newCardNumber + 1;
-        obj.GetComponent<SpriteRenderer>().sprite = Numbers[newCardNumber];
         if (LimitType == (int)LimitTypes.Charge && ScoreObject[TurnNumber - 1].Charge >= 0)
         {
             ScoreObject[TurnNumber - 1].UpdateCharge(newCardNumber + 1);

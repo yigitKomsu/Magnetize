@@ -7,6 +7,10 @@ public class SoundManager : MonoBehaviour
     [SerializeField]
     private AudioClip NumberPickup, NumberDrop, ScoreSound;
     [SerializeField]
+    private AudioClip Refill, Magnetize, Double;
+    [SerializeField]
+    private AudioClip RefillScore, MagnetizeScore, DoubleScore;
+    [SerializeField]
     private AudioClip LoopingTimer;
     public static SoundManager GetSoundManager { get; private set; }
 
@@ -19,6 +23,18 @@ public class SoundManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("Muted") == 1) return;
         OneShotPlayer.PlayOneShot(NumberPickup);
+    }
+
+    public void PlayRefill()
+    {
+        if (PlayerPrefs.GetInt("Muted") == 1) return;
+        OneShotPlayer.PlayOneShot(Refill);
+    }
+
+    public void PlayRefillScore()
+    {
+        if (PlayerPrefs.GetInt("Muted") == 1) return;
+        OneShotPlayer.PlayOneShot(RefillScore);
     }
 
     public void DropNumber()

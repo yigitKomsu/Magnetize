@@ -41,6 +41,11 @@ public class LevelManager : MonoBehaviour
         CurrentBetText.text = "CURRENT BET: " + Bet.TotalBet.ToString();
     }
 
+    public void BetEventText(string message)
+    {
+        NotificationText.text = message.ToUpper();
+    }
+
     public void WaitingRoomClose()
     {
         GPGController.LeaveRoom();

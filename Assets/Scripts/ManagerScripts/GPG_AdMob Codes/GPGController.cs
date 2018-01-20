@@ -120,6 +120,21 @@ public class GPGController : RealTimeMultiplayerListener
             }
         }
         return id;
+    }        
+
+    public static string GetOpponentName()
+    {
+        List<Participant> participants = PlayGamesPlatform.Instance.RealTime.GetConnectedParticipants();
+        string id = "";
+        foreach (var item in participants)
+        {
+            if (item.ParticipantId != PlayGamesPlatform.Instance.RealTime.GetSelf().ParticipantId)
+            {
+                id = item.DisplayName;
+                break;
+            }
+        }
+        return id;
     }
 
     public void OnRoomConnected(bool success)

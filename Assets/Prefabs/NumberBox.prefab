@@ -147,6 +147,14 @@ MonoBehaviour:
   MyNumber: 1
   TurnNumber: 1
   isMagnetized: 0
+  doubles:
+  - {fileID: 7400000, guid: 8dffd9af2aff0f145836217d939d67a7, type: 2}
+  - {fileID: 7400000, guid: f1e5d4318edbcbc4bbf8bd5ca66a27e0, type: 2}
+  - {fileID: 7400000, guid: 18af3c7146553d840b55395e33c781ad, type: 2}
+  refills:
+  - {fileID: 7400000, guid: a105246750e81e848b6126015a58b622, type: 2}
+  - {fileID: 7400000, guid: c82500453781f7a4a90eb6d9eb117a54, type: 2}
+  - {fileID: 7400000, guid: 39c0a4ccfe5de3046a1ed4aaf335a810, type: 2}
 --- !u!212 &212144420359057698
 SpriteRenderer:
   m_ObjectHideFlags: 1

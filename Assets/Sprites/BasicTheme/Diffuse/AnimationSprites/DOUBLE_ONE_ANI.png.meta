@@ -1,0 +1,368 @@
+fileFormatVersion: 2
+guid: e138cf0338bf523459cfd58f114757cd
+timeCreated: 1516382533
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: DOUBLE_ONE_ANI_0
+    21300002: DOUBLE_ONE_ANI_1
+    21300004: DOUBLE_ONE_ANI_2
+    21300006: DOUBLE_ONE_ANI_3
+    21300008: DOUBLE_ONE_ANI_4
+    21300010: DOUBLE_ONE_ANI_5
+    21300012: DOUBLE_ONE_ANI_6
+    21300014: DOUBLE_ONE_ANI_7
+    21300016: DOUBLE_ONE_ANI_8
+    21300018: DOUBLE_ONE_ANI_9
+    21300020: DOUBLE_ONE_ANI_10
+    21300022: DOUBLE_ONE_ANI_11
+    21300024: DOUBLE_ONE_ANI_12
+  externalObjects: {}
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_0
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 0
+        width: 203
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -101.5, y: 100}
+        - {x: -101.5, y: -93.10345}
+        - {x: -96.3125, y: -100}
+        - {x: 96.73438, y: -100}
+        - {x: 101.5, y: -97.24138}
+        - {x: 101.5, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_1
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 0
+        width: 203
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -101.31641, y: 100}
+        - {x: -101.31641, y: -100}
+        - {x: 101.5, y: -100}
+        - {x: 101.5, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_2
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 0
+        width: 204
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -97.97851, y: 100}
+        - {x: -102, y: 95.86207}
+        - {x: -102, y: -97.24138}
+        - {x: -96.5996, y: -100}
+        - {x: 97.82618, y: -100}
+        - {x: 102, y: -93.10345}
+        - {x: 102, y: 93.10345}
+        - {x: 97.82618, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_3
+      rect:
+        serializedVersion: 2
+        x: 663
+        y: 0
+        width: 202
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -100.91407, y: 100}
+        - {x: -100.91407, y: -93.10345}
+        - {x: -95.398445, y: -100}
+        - {x: 97.64843, y: -100}
+        - {x: 101, y: -97.24138}
+        - {x: 101, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_4
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 0
+        width: 204
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -100.33403, y: 100}
+        - {x: -101.71294, y: 98.62069}
+        - {x: -101.71294, y: -100}
+        - {x: 96.84956, y: -100}
+        - {x: 102, y: -94.48276}
+        - {x: 102, y: 98.62069}
+        - {x: 100.98628, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_5
+      rect:
+        serializedVersion: 2
+        x: 1094
+        y: 0
+        width: 204
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -102, y: 100}
+        - {x: -102, y: -100}
+        - {x: 99.119156, y: -100}
+        - {x: 102, y: -95.86207}
+        - {x: 102, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_6
+      rect:
+        serializedVersion: 2
+        x: 1311
+        y: 0
+        width: 202
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -101, y: 100}
+        - {x: -101, y: -100}
+        - {x: 101, y: -100}
+        - {x: 101, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_7
+      rect:
+        serializedVersion: 2
+        x: 1526
+        y: 0
+        width: 204
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -101.79887, y: 100}
+        - {x: -101.79887, y: -100}
+        - {x: 102, y: -100}
+        - {x: 102, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_8
+      rect:
+        serializedVersion: 2
+        x: 1742
+        y: 0
+        width: 204
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -102, y: 100}
+        - {x: -102, y: -100}
+        - {x: 102, y: -100}
+        - {x: 102, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_9
+      rect:
+        serializedVersion: 2
+        x: 1959
+        y: 0
+        width: 202
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -101, y: 100}
+        - {x: -101, y: -100}
+        - {x: 101, y: -100}
+        - {x: 101, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_10
+      rect:
+        serializedVersion: 2
+        x: 2174
+        y: 0
+        width: 204
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -101.88488, y: 100}
+        - {x: -101.88488, y: -100}
+        - {x: 102, y: -100}
+        - {x: 102, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_11
+      rect:
+        serializedVersion: 2
+        x: 2390
+        y: 0
+        width: 203
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -101.5, y: 100}
+        - {x: -101.5, y: -100}
+        - {x: 101.5, y: -100}
+        - {x: 101.5, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DOUBLE_ONE_ANI_12
+      rect:
+        serializedVersion: 2
+        x: 2607
+        y: 0
+        width: 203
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -101.17186, y: 100}
+        - {x: -101.17186, y: -93.10345}
+        - {x: -94.27733, y: -100}
+        - {x: 98.76955, y: -100}
+        - {x: 101.5, y: -94.48276}
+        - {x: 101.5, y: 100}
+      physicsShape: []
+      tessellationDetail: 0
+    outline: []
+    physicsShape: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

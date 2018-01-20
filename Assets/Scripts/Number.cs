@@ -11,6 +11,7 @@ public class Number : MonoBehaviour
     private GameManager _manager;
     private Vector2 StartPos;
     private SoundManager _soundManager;
+    private Animator _animator;
     public int TurnNumber;
     private int ScoreForWhom;
     private bool isDouble;
@@ -18,10 +19,12 @@ public class Number : MonoBehaviour
     private bool isRefill;
     private SpriteRenderer sr;
     private GameObject DoorObject;
+    protected AnimatorOverrideController animatorOverrideController;
+    
 
     IEnumerator WaitRoutine(Transform target)
     {
-        float speed = Random.Range(3f, 8f);
+        float speed = Random.Range(7f, 12f);
         Vector3 offset = new Vector3(Random.Range(-0.4f, 0.4f), 0, 0);
         Vector3 pos = target.position;
         pos += offset;
@@ -52,6 +55,8 @@ public class Number : MonoBehaviour
     {
         transform.GetChild(0).parent = null;
         sr = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
+        _animator.runtimeAnimatorController = Resources.Load("NumberBox" + MyNumber) as RuntimeAnimatorController;
         _turnManager = TurnManager.GetTurnManager;
         _soundManager = SoundManager.GetSoundManager;
         _manager = GameManager.GetGameManager;
@@ -74,13 +79,13 @@ public class Number : MonoBehaviour
 
     public void DoublePower()
     {
-        GetComponent<SpriteRenderer>().sprite = _manager.Double[MyNumber - 1];
+        _animator.SetTrigger("double");
         isDouble = true;
     }
 
     public void Magnetize(int? row = null, int? col = null)
     {
-        sr.sprite = _manager.Magnetized[MyNumber - 1];
+        _animator.SetTrigger("magnetize");
         if (row != null)
             _manager.BoardHandler.MagnetizeRow(row, col);
         isMagnetized = true;
@@ -88,7 +93,8 @@ public class Number : MonoBehaviour
 
     public void Refill()
     {
-        sr.sprite = _manager.Refill[MyNumber - 1];
+        //_soundManager.PlayRefill();
+        _animator.SetTrigger("refill");
         isRefill = true;
     }
 
@@ -101,7 +107,7 @@ public class Number : MonoBehaviour
     {
         _colliding = null;
     }
-    
+
     private void OnMouseDown()
     {
         if (TurnNumber == _turnManager.TurnNumber)

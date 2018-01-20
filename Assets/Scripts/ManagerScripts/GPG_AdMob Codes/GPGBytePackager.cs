@@ -37,7 +37,7 @@ public class GPGBytePackager
         else if(actionType == ProjectConstants.satisfied)
         {
             UnityEngine.Debug.Log("Both devices are satisfied!!! Total bet is: " + Bet.TotalBet);
-            LevelManager.GetLevelManager.LoadLocalGame();
+            //LevelManager.GetLevelManager.LoadLocalGame();
         }
 
         //we have an unpacked package of unknown length
