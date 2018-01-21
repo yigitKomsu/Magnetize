@@ -16,7 +16,7 @@ public class Number : MonoBehaviour
     private int ScoreForWhom;
     private bool isDouble;
     public bool isMagnetized;
-    private bool isRefill;
+    private bool isRefill, isPlayed;
     private SpriteRenderer sr;
     private GameObject DoorObject;
     protected AnimatorOverrideController animatorOverrideController;
@@ -57,6 +57,7 @@ public class Number : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _animator.runtimeAnimatorController = Resources.Load("NumberBox" + MyNumber) as RuntimeAnimatorController;
+        
         _turnManager = TurnManager.GetTurnManager;
         _soundManager = SoundManager.GetSoundManager;
         _manager = GameManager.GetGameManager;
@@ -67,7 +68,7 @@ public class Number : MonoBehaviour
     public void Destroy(int row, int column, int playerNum, Transform position)
     {
         ScoreForWhom = playerNum;
-        _manager.BoardHandler.GameBoardMatrix.row[row].column[column] = null;
+        GameManager.GetGameManager.BoardHandler.GameBoardMatrix.row[row].column[column] = null;
         Fly(position);
     }
 
@@ -110,17 +111,27 @@ public class Number : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (TurnNumber == _turnManager.TurnNumber)
+        if (TurnNumber == _turnManager.TurnNumber && !isPlayed)
             _soundManager.PickNumber();
     }
 
     private void OnMouseDrag()
     {
-        if (TurnNumber == _turnManager.TurnNumber)
+        if (TurnNumber == _turnManager.TurnNumber && !isPlayed)
         {
             Dropped = false;
             _myTransform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
         }
+    }
+
+    public void PlaceTile()
+    {
+        //Debug.Log(_myTransform);
+        //Debug.Log(_colliding);
+        //transform.SetParent(_colliding);
+        //transform.localPosition = Vector3.zero;
+        transform.localScale *= 0.85f;
+        isPlayed = true;
     }
 
     private void OnMouseUp()
@@ -130,14 +141,14 @@ public class Number : MonoBehaviour
         {
             _myTransform.position = StartPos;
         }
-        else if (Dropped)
+        else if (Dropped && !isPlayed)
         {
-            _myTransform.SetParent(_colliding);
-            _myTransform.localPosition = Vector3.zero;
-            _myTransform.localScale *= 0.85f;
+            transform.SetParent(_colliding);
+            transform.localPosition = Vector3.zero;
+            PlaceTile();
             _manager.UpdateMatrix(Mathf.RoundToInt(_colliding.position.x + 2),
                 Mathf.RoundToInt(_colliding.position.y + 2), this);
-            _manager.SpawnCard(MyNumber, StartPos, TurnNumber);
+            _manager.SpawnCard(this, StartPos, TurnNumber);
             sr.sortingOrder = 0;
         }
         _soundManager.DropNumber();

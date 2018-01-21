@@ -32,41 +32,19 @@ public class ProjectConstants
     public static int PlayerTwo = 1;
     public static int Noone = 2;
 
-    private static int userCredit;
+    public static int userCredit;
     public static int tempUserCredit;
     public static int betAmount;
 
     public static bool UpdateUserCredit(int value)
     {
-        int currentCredit = userCredit = PlayerPrefs.GetInt("Credit");
-        currentCredit += value;
-        if(currentCredit < 0)
-        {
-            return false;
-        }
-        PlayerPrefs.SetInt("Credit", currentCredit);
-        Debug.Log("User credits: " + currentCredit);
+        
         return true;
     }
-
-    public static bool Bet(int value)
-    {
-        userCredit = PlayerPrefs.GetInt("Credit");
-        if (tempUserCredit == 0) tempUserCredit = userCredit;
-
-        if ((tempUserCredit -= value) > 0)
-        {
-            betAmount += value;
-            return true;
-        }
-
-        return false;
-    }
-
+    
     public static void RestoreUserCredit()
     {
-        PlayerPrefs.SetInt("Credit", userCredit);
-        Debug.Log("User credits: " + userCredit);
+        
     }
 }
 

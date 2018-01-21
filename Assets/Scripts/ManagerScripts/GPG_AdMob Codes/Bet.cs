@@ -95,7 +95,7 @@
                 };
                 GPGController.SendByteMessage(GPGBytePackager.CreatePackage(msg), GPGController.GetOpponentId());
                 UnityEngine.Debug.Log("Both devices are satisfied!!! Total bet is: " + Bet.TotalBet);
-                //LevelManager.GetLevelManager.LoadLocalGame();
+                LevelManager.GetLevelManager.LoadOnlineGame();
             }
             return difference;
         }

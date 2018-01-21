@@ -8,15 +8,17 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private ScoreHandler[] ScoreObject;
     [SerializeField]
-    public Sprite[] Numbers, Magnetized;
-    [SerializeField]
     private GameObject NumberBox;
+    [SerializeField]
+    private Number[] PlayerOneNumbers;
+    [SerializeField]
+    private Number[] PlayerTwoNumbers;
     [SerializeField]
     private Vector2[] PlayerOnePositions, PlayerTwoPositions;
     public GameBoardHandler BoardHandler;
     public int Limit;
     public int LimitType;
-    public bool scored;
+    public bool scored, isOnline;
     private Transform flyPosition;
 
     private void Awake()
@@ -38,6 +40,14 @@ public class GameManager : MonoBehaviour
         scored = false;
 
         SetGame();
+    }
+
+    public void SetSecondNonPlayable()
+    {
+        foreach (var item in PlayerTwoNumbers)
+        {
+            item.TurnNumber = -1; //he cannot play these then
+        }
     }
 
     public void RefillPower(int value, int target)
@@ -86,21 +96,73 @@ public class GameManager : MonoBehaviour
         Destroy(LevelManager.GetLevelManager.gameObject);
     }
 
-    public void SpawnCard(int number, Vector2 pos, int TurnNumber)
+    public void SpawnCardFromPeer(int number, int pos_x, int pos_y)
     {
-        var obj = Instantiate(NumberBox, pos, Quaternion.identity);
-        int newCardNumber = GetNewNumber(number); //yeni eklenen sayıyı eklemeyi unutma
-        obj.GetComponent<Number>().TurnNumber = TurnNumber;
-        obj.GetComponent<Number>().MyNumber = newCardNumber + 1;
+        var spawned = Instantiate(NumberBox, new Vector2(pos_x, pos_y), Quaternion.identity);
+        spawned.transform.parent = BoardHandler.transform;
+        spawned.transform.localPosition = new Vector2(pos_x, pos_y);
+        spawned.GetComponent<Number>().MyNumber = number;
+        spawned.GetComponent<Number>().TurnNumber = -10; //non playable
+        spawned.GetComponent<Number>().PlaceTile();
+        BoardHandler.GameBoardMatrix.row[pos_y + 2].column[pos_x + 2] = spawned.GetComponent<Number>();
+        ControlMatrix(pos_x + 2, pos_y + 2, spawned.GetComponent<Number>().MyNumber);
+    }
+
+    public void SpawnCard(Number number, Vector2 pos, int TurnNumber)
+    {
+        var spawned = Instantiate(NumberBox, pos, Quaternion.identity);
+        int newCardNumber = GetNewNumber(number.MyNumber);
+        spawned.GetComponent<Number>().TurnNumber = TurnNumber;
+        spawned.GetComponent<Number>().MyNumber = newCardNumber + 1;
+        SetNumberIndex(number, spawned.GetComponent<Number>());
         if (LimitType == (int)LimitTypes.Charge && ScoreObject[TurnNumber - 1].Charge >= 0)
         {
             ScoreObject[TurnNumber - 1].UpdateCharge(newCardNumber + 1);
         }
     }
 
+    private void SetNumberIndex(Number number, Number spawned)
+    {
+        if(number.TurnNumber == 1)
+        {
+            for (int i = 0; i < PlayerOneNumbers.Length; i++)
+            {
+                if(PlayerOneNumbers[i] == number)
+                {
+                    PlayerOneNumbers[i] = spawned;
+                    //Send message for PlayerOneNumbers index i to be spawned with number and turnNumber
+                    break;
+                }
+            }
+        }
+        else if(number.TurnNumber == 2)
+        {
+            for (int i = 0; i < PlayerTwoNumbers.Length; i++)
+            {
+                if (PlayerTwoNumbers[i] == number)
+                {
+                    PlayerTwoNumbers[i] = spawned;
+                    //Send message for PlayerTwoNumbers index i to be spawned with number and turnNumber
+                    break;
+                }
+            }
+        }
+    }
+
     public void UpdateMatrix(int pos_x, int pos_y, Number card)
     {
-        //Post this information to the connected participant for update        
+        if(isOnline)
+        {
+            string[] data = new string[]
+            {
+                ProjectConstants.dropAndSpawnNumber,
+                pos_x.ToString(),
+                pos_y.ToString(),
+                card.MyNumber.ToString()
+            };
+            GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data), 
+                GPGController.GetOpponentId());
+        }
         BoardHandler.GameBoardMatrix.row[pos_y].column[pos_x] = card;
         BoardHandler.GivePower(pos_x, pos_y, card);
         ControlMatrix(pos_x, pos_y, card.MyNumber);
@@ -149,6 +211,7 @@ public class GameManager : MonoBehaviour
         {
             ScoreObject[0].PrintToTurnField(ProjectConstants.TiedText);
             ScoreObject[1].PrintToTurnField(ProjectConstants.TiedText);
+            //Send tied message
             _turnManager.ShowPanels();
             return;
         }
@@ -157,10 +220,12 @@ public class GameManager : MonoBehaviour
         if (winnerIndex == 0)
         {
             ScoreObject[1].PrintToTurnField(ProjectConstants.LoseText);
+            //Send YOU WON message
         }
         else if (winnerIndex == 1)
         {
             ScoreObject[0].PrintToTurnField(ProjectConstants.LoseText);
+            //Send YOU LOST message
         }
         _turnManager.ShowPanels();
         _soundManager.StopLoop();

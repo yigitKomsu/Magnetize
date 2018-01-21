@@ -552,6 +552,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4ed71a6486216434999425c6fc41cf8d, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &217892137 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114697836907472308, guid: 4ed71a6486216434999425c6fc41cf8d,
+    type: 2}
+  m_PrefabInternal: {fileID: 217892136}
+  m_Script: {fileID: 11500000, guid: 42dba2cce8f62d84eaca5c7d8c113afb, type: 3}
 --- !u!1 &277134288
 GameObject:
   m_ObjectHideFlags: 0
@@ -908,6 +914,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4ed71a6486216434999425c6fc41cf8d, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &347963828 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114697836907472308, guid: 4ed71a6486216434999425c6fc41cf8d,
+    type: 2}
+  m_PrefabInternal: {fileID: 347963827}
+  m_Script: {fileID: 11500000, guid: 42dba2cce8f62d84eaca5c7d8c113afb, type: 3}
 --- !u!1 &353224066
 GameObject:
   m_ObjectHideFlags: 0
@@ -1183,15 +1195,15 @@ MonoBehaviour:
   ScoreObject:
   - {fileID: 1624223445}
   - {fileID: 1442922228}
-  Numbers:
-  - {fileID: 21300000, guid: 96eb21094264ea144b62fc979abc296d, type: 3}
-  - {fileID: 21300000, guid: a631b02c6b25f7446b9c0c9c295554ce, type: 3}
-  - {fileID: 21300000, guid: 7472397eefb172c4fb1c705f91692871, type: 3}
-  Magnetized:
-  - {fileID: 21300000, guid: 1228ececd36609a4ca9ce4aaacbb2ef8, type: 3}
-  - {fileID: 21300000, guid: da8c696af25dd4b4c9d8e5cff85d6766, type: 3}
-  - {fileID: 21300000, guid: 921d052d6f461824b8a52382cbe361c8, type: 3}
   NumberBox: {fileID: 1261167266178706, guid: 4ed71a6486216434999425c6fc41cf8d, type: 2}
+  PlayerOneNumbers:
+  - {fileID: 217892137}
+  - {fileID: 735083838}
+  - {fileID: 347963828}
+  PlayerTwoNumbers:
+  - {fileID: 1636533439}
+  - {fileID: 1620230832}
+  - {fileID: 661853222}
   PlayerOnePositions:
   - {x: -1.58, y: -4.02}
   - {x: 0, y: -4.02}
@@ -1204,6 +1216,7 @@ MonoBehaviour:
   Limit: 60
   LimitType: 0
   scored: 0
+  isOnline: 0
 --- !u!4 &546642485
 Transform:
   m_ObjectHideFlags: 0
@@ -1312,6 +1325,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4ed71a6486216434999425c6fc41cf8d, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &661853222 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114697836907472308, guid: 4ed71a6486216434999425c6fc41cf8d,
+    type: 2}
+  m_PrefabInternal: {fileID: 661853221}
+  m_Script: {fileID: 11500000, guid: 42dba2cce8f62d84eaca5c7d8c113afb, type: 3}
 --- !u!1 &667706703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1637,6 +1656,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4ed71a6486216434999425c6fc41cf8d, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &735083838 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114697836907472308, guid: 4ed71a6486216434999425c6fc41cf8d,
+    type: 2}
+  m_PrefabInternal: {fileID: 735083837}
+  m_Script: {fileID: 11500000, guid: 42dba2cce8f62d84eaca5c7d8c113afb, type: 3}
 --- !u!1 &737786592
 GameObject:
   m_ObjectHideFlags: 0
@@ -4382,6 +4407,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4ed71a6486216434999425c6fc41cf8d, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1620230832 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114697836907472308, guid: 4ed71a6486216434999425c6fc41cf8d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1620230831}
+  m_Script: {fileID: 11500000, guid: 42dba2cce8f62d84eaca5c7d8c113afb, type: 3}
 --- !u!224 &1624223443 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224496805959992274, guid: 16ac875d847ca644fbfe500c287dfe0a,
@@ -4469,6 +4500,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4ed71a6486216434999425c6fc41cf8d, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1636533439 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114697836907472308, guid: 4ed71a6486216434999425c6fc41cf8d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1636533438}
+  m_Script: {fileID: 11500000, guid: 42dba2cce8f62d84eaca5c7d8c113afb, type: 3}
 --- !u!1 &1659763617
 GameObject:
   m_ObjectHideFlags: 0
@@ -5499,10 +5536,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
+  m_ScaleFactor: 0.287
   m_ReferenceResolution: {x: 1440, y: 2560}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

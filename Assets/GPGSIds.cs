@@ -40,6 +40,7 @@ public static class GPGSIds
         public const string achievement_power = "CgkIqPap-MAGEAIQGw"; // <GPGSID>
         public const string achievement_ahead_of_time = "CgkIqPap-MAGEAIQDw"; // <GPGSID>
         public const string achievement_opportunist = "CgkIqPap-MAGEAIQGg"; // <GPGSID>
+        public const string leaderboard_credits = "CgkIqPap-MAGEAIQIA"; // <GPGSID>
         public const string achievement_esports_player = "CgkIqPap-MAGEAIQEw"; // <GPGSID>
 
 }

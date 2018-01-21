@@ -13,6 +13,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private Text OnlineStatusText, CurrentIncreaseText, CurrentBetText, NotificationText, RemainingCreditsTest;
     private GameManager _manager;
+    private bool isOnline = false;
     public int Limit;
     public LimitTypes Type;
     private int timeLimit, scoreLimit, pieceLimit;
@@ -25,12 +26,12 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        CurrentBetText.text = "CURRENT BET: " + Bet.TotalBet.ToString();
+        BetText();
         OnlineStatusPanel.SetActive(false);
         BetPanel.SetActive(false);
         AdController.ConnectAds();
         if (!GPGController.IsAuthenticated())
-            GPGController.LoginToGPG();
+            GPGController.GetGpgController.LoginToGPG();
         Limit = timeLimit = scoreLimit = pieceLimit = 30;
         if (GetLevelManager == null) GetLevelManager = this;
         SetDevicePrefs();
@@ -39,6 +40,7 @@ public class LevelManager : MonoBehaviour
     public void BetText()
     {
         CurrentBetText.text = "CURRENT BET: " + Bet.TotalBet.ToString();
+        RemainingCreditsTest.text = ProjectConstants.userCredit.ToString();
     }
 
     public void BetEventText(string message)
@@ -125,7 +127,14 @@ public class LevelManager : MonoBehaviour
             _manager.LimitType = (int)Type;
         }
         if (!GPGController.IsAuthenticated())
-            GPGController.LoginToGPG();
+            GPGController.GetGpgController.LoginToGPG();
+
+        if(isOnline)
+        {
+            GPGController.GetGpgController.AssignTurns();
+            _manager.SetSecondNonPlayable();
+            _manager.isOnline = isOnline;
+        }
     }
 
     public void RequestVideo()
@@ -140,13 +149,21 @@ public class LevelManager : MonoBehaviour
 
     public void LoadOnlineGame(int type)
     {
-        GPGController.GpgController.CreateOrJoinQuickMatch(type); //Button kodu
+        GPGController.GetGpgController.CreateOrJoinQuickMatch(type); //Button kodu
         OnlineStatusPanel.SetActive(true);
     }    
 
     public void LoadLocalGame()
     {
+        isOnline = false;
         DontDestroyOnLoad(gameObject); //Button kodu
+        LoadLevel(ProjectConstants.CouchPlay);
+    }
+
+    public void LoadOnlineGame()
+    {
+        DontDestroyOnLoad(gameObject);
+        isOnline = true;
         LoadLevel(ProjectConstants.CouchPlay);
     }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
+using GooglePlayGames.BasicApi.SavedGame;
+using System.Text;
 using GooglePlayGames.BasicApi.Multiplayer;
 using UnityEngine;
 using System.Collections.Generic;
@@ -14,29 +16,237 @@ public struct Player
 
 public class GPGController : RealTimeMultiplayerListener
 {
-    public static GPGController GpgController { get { return new GPGController(); } }
+    public static GPGController GetGpgController { get { return new GPGController(); } }
 
     public Player player_one, player_two;
 
     public static int matchCost; //half of total bet
 
-    public static void LoginToGPG()
+    private const string SAVE_NAME = "Save";
+
+    private bool IsCloudDataLoaded = false, IsSaving = false;
+
+    public void LoginToGPG()
     {
-        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().Build();
+        if (!PlayerPrefs.HasKey(SAVE_NAME))
+        {
+            PlayerPrefs.SetString(SAVE_NAME, "500");
+        }
+        if (!PlayerPrefs.HasKey("IsFirstTime"))
+        {
+            PlayerPrefs.SetInt("IsFirstTime", 1);
+        }
+
+        LoadLocal();
+        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+            .EnableSavedGames()
+            .Build();
         PlayGamesPlatform.DebugLogEnabled = true;
+        Debug.Log(config.ToString());
         PlayGamesPlatform.InitializeInstance(config);
         PlayGamesPlatform.Activate();
         Login();
     }
 
-    private static void Login()
+    public void AssignTurns()
+    {
+        List<Participant> participants = PlayGamesPlatform.Instance.RealTime.GetConnectedParticipants();
+
+        if (participants[1].ParticipantId == PlayGamesPlatform.Instance.RealTime.GetSelf().ParticipantId)
+            TurnManager.GetTurnManager.ChangeTurn();
+    }
+
+    private void Login()
     {
         var platformInstance = PlayGamesPlatform.Instance;
         if (!IsAuthenticated())
         {
-            platformInstance.Authenticate(success => { Debug.Log("Logged in to Google Play Services!"); });
+            platformInstance.Authenticate(success => {
+                Social.ShowLeaderboardUI();
+                LoadData();
+            });
         }
     }
+
+    #region Save
+    private string GameDataToString()
+    {
+        return ProjectConstants.userCredit.ToString();
+    }
+
+    private void StringToGameData(string localData, string cloudData)
+    {
+        if (PlayerPrefs.GetInt("IsFirstTime") == 1)
+        {
+            PlayerPrefs.SetInt("IsFirstTime", 0);
+            if (int.Parse(cloudData) > int.Parse(localData))
+            {
+                PlayerPrefs.SetString(SAVE_NAME, cloudData);
+            }
+        }
+        else
+        {
+            if (int.Parse(localData) > int.Parse(cloudData))
+            {
+                ProjectConstants.userCredit = int.Parse(localData);
+                AddScoreToLeaderBoard(GPGSIds.leaderboard_credits, ProjectConstants.userCredit);
+                IsCloudDataLoaded = true;
+                SaveData();
+            }
+        }
+        ProjectConstants.userCredit = int.Parse(cloudData);
+        IsCloudDataLoaded = true;
+    }
+
+    private void StringToGameData(string localData)
+    {
+        ProjectConstants.userCredit = int.Parse(localData);
+    }
+
+    public void LoadData()
+    {
+        if (IsAuthenticated())
+        {
+            Debug.Log("Load data called");
+            IsSaving = false;
+            ((PlayGamesPlatform)Social.Active).SavedGame.
+                OpenWithManualConflictResolution(SAVE_NAME,
+                DataSource.ReadCacheOrNetwork, true, ResolveConflict, OnSavedGameOpened);
+        }
+        else
+        {
+            LoadLocal();
+        }
+    }
+
+    private void LoadLocal()
+    {
+        StringToGameData(PlayerPrefs.GetString(SAVE_NAME));
+    }
+
+    private void SaveLocal()
+    {
+        Debug.Log(ProjectConstants.userCredit);
+        PlayerPrefs.SetString(SAVE_NAME, GameDataToString());
+    }
+
+    public void SaveData()
+    {
+        if (!IsCloudDataLoaded)
+        {
+            SaveLocal();
+            return;
+        }
+        if (IsAuthenticated())
+        {
+            IsSaving = true;
+            Debug.Log(ProjectConstants.userCredit);
+            ((PlayGamesPlatform)Social.Active).SavedGame.
+                OpenWithManualConflictResolution(SAVE_NAME,
+                DataSource.ReadCacheOrNetwork, true, ResolveConflict, OnSavedGameOpened);
+        }
+        else
+        {
+            SaveLocal();
+        }
+    }
+
+    private void OnSavedGameOpened(SavedGameRequestStatus status, ISavedGameMetadata game)
+    {
+        if (status == SavedGameRequestStatus.Success)
+        {
+            if (!IsSaving)
+            {
+                LoadGame(game);
+            }
+            else
+            {
+                SaveGame(game);
+            }
+        }
+        else
+        {
+            if (!IsSaving)
+            {
+                LoadLocal();
+            }
+            else
+            {
+                SaveLocal();
+            }
+        }
+    }
+
+    private void LoadGame(ISavedGameMetadata game)
+    {
+        ((PlayGamesPlatform)Social.Active).SavedGame.ReadBinaryData(game, OnSavedGameDataRead);
+    }
+
+    private void OnSavedGameDataRead(SavedGameRequestStatus status, byte[] data)
+    {
+        if (status == SavedGameRequestStatus.Success)
+        {
+            string cloudData;
+            if (data.Length == 0)
+                cloudData = "500";
+            else
+                cloudData = GPGBytePackager.GetString(data);
+            string localData = PlayerPrefs.GetString(SAVE_NAME);
+            StringToGameData(localData, cloudData);
+        }
+    }
+
+    private void SaveGame(ISavedGameMetadata game)
+    {
+        string stringToSave = GameDataToString();
+        SaveLocal();
+        var data = GPGBytePackager.CreatePackage(stringToSave);
+
+        SavedGameMetadataUpdate update = new SavedGameMetadataUpdate.Builder().Build();
+        ((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate(game, update,
+            data, OnGameSaved);
+    }
+
+    private void OnGameSaved(SavedGameRequestStatus status, ISavedGameMetadata game)
+    {
+
+    }
+
+    private void ResolveConflict(IConflictResolver resolver,
+        ISavedGameMetadata original, byte[] originalData,
+        ISavedGameMetadata unmerged, byte[] unmergetData)
+    {
+        Debug.Log("Resolving conflict");
+
+        if (originalData == null)
+        {
+            Debug.Log("Getting unmerged");
+            resolver.ChooseMetadata(unmerged);
+        }
+        else if (unmergetData == null)
+        {
+            Debug.Log("Getting original");
+            resolver.ChooseMetadata(original);
+        }
+        else
+        {
+            var originalDataStr = GPGBytePackager.GetString(originalData);
+            var unmergedDataStr = GPGBytePackager.GetString(unmergetData);
+            Debug.Log("Comparing unmerged and original");
+            if (int.Parse(originalDataStr) > int.Parse(unmergedDataStr))
+            {
+                resolver.ChooseMetadata(original);
+                return;
+            }
+            else if (int.Parse(originalDataStr) > int.Parse(unmergedDataStr))
+            {
+                resolver.ChooseMetadata(unmerged);
+                return;
+            }
+            resolver.ChooseMetadata(original);
+        }
+    }
+    #endregion
 
     public static void ShowAchievements()
     {
@@ -51,6 +261,11 @@ public class GPGController : RealTimeMultiplayerListener
     public static void UnlockAchievement(string id)
     {
         Social.ReportProgress(id, 100, success => { });
+    }
+
+    public void AddScoreToLeaderBoard(string leaderboardId, long credit)
+    {
+        Social.ReportScore(credit, leaderboardId, success => { });
     }
 
     public static bool IsAuthenticated()
@@ -113,14 +328,14 @@ public class GPGController : RealTimeMultiplayerListener
         string id = "";
         foreach (var item in participants)
         {
-            if(item.ParticipantId != PlayGamesPlatform.Instance.RealTime.GetSelf().ParticipantId)
+            if (item.ParticipantId != PlayGamesPlatform.Instance.RealTime.GetSelf().ParticipantId)
             {
                 id = item.ParticipantId;
                 break;
             }
         }
         return id;
-    }        
+    }
 
     public static string GetOpponentName()
     {
@@ -153,7 +368,7 @@ public class GPGController : RealTimeMultiplayerListener
 
             player_two.participant = participants[1];
             player_two.assignedTurnNumber = 2;
-            player_two.isMyself = participants[0].ParticipantId == myself.ParticipantId;
+            player_two.isMyself = participants[1].ParticipantId == myself.ParticipantId;
             Debug.Log(player_one);
             Debug.Log(player_two);
             LevelManager.GetLevelManager.OpenBetPanel();
@@ -191,6 +406,6 @@ public class GPGController : RealTimeMultiplayerListener
         var message = GPGBytePackager.UnpackPackage(data);
         Debug.Log("I received message from: " + senderId + " ");
         GPGBytePackager.ProcessPackage(message);
-        
+
     }
 }

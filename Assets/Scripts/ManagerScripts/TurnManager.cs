@@ -24,7 +24,7 @@ public class TurnManager : MonoBehaviour
             Timer[1].Init(GameManager.GetGameManager.Limit, 1);
             Timer[TurnNumber - 1].StartTimer();
             SoundManager.GetSoundManager.StartTimer();
-        }        
+        }
     }
 
     public void AddTime(int time, int turn)
@@ -40,8 +40,8 @@ public class TurnManager : MonoBehaviour
             Timer[TurnNumber - 1].StopTimer();
         _animator[TurnNumber - 1].SetTrigger("StopTurn");
         if (TurnNumber == 1)
-        {            
-            TurnNumber = 2;            
+        {
+            TurnNumber = 2;
         }
         else
         {

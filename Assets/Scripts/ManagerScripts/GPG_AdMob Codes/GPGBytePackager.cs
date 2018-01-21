@@ -9,14 +9,25 @@ public class GPGBytePackager
             final += item + "/";
         }
         UnityEngine.Debug.Log(final);
-        return System.Text.ASCIIEncoding.Default.GetBytes(final);
+        return System.Text.Encoding.ASCII.GetBytes(final);
+    }
+
+    public static byte[] CreatePackage(string data)
+    {
+        return System.Text.Encoding.ASCII.GetBytes(data);
     }
 
     public static string[] UnpackPackage(byte[] data)
     {
-        var dataPackage = System.Text.ASCIIEncoding.Default.GetString(data);
+        var dataPackage = System.Text.Encoding.ASCII.GetString(data);
         string[] unpackedData = dataPackage.Split('/');
         return unpackedData;
+    }
+
+    public static string GetString(byte[] data)
+    {
+        var dataPackage = System.Text.Encoding.ASCII.GetString(data);
+        return dataPackage;
     }
 
     public static void ProcessPackage(string[] package)
@@ -37,9 +48,15 @@ public class GPGBytePackager
         else if(actionType == ProjectConstants.satisfied)
         {
             UnityEngine.Debug.Log("Both devices are satisfied!!! Total bet is: " + Bet.TotalBet);
-            //LevelManager.GetLevelManager.LoadLocalGame();
+            LevelManager.GetLevelManager.LoadOnlineGame();
         }
-
+        else if(actionType == ProjectConstants.dropAndSpawnNumber)
+        {
+            int pos_x = int.Parse(package[1]);
+            int pos_y = int.Parse(package[2]);
+            int cardNumber = int.Parse(package[3]);
+            GameManager.GetGameManager.SpawnCardFromPeer(cardNumber, pos_x - 2, pos_y - 2);
+        }
         //we have an unpacked package of unknown length
         //we need to process it somehow
         //it contains numbers and words
