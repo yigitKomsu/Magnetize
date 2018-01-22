@@ -251,7 +251,7 @@ public class GameBoardHandler : MonoBehaviour
         scored = false;
         ClearCellsAndScoreInRow(GameBoardMatrix.row[row].column, row, cardNumber, number);
         ClearCellsAndScoreInColumn(GameBoardMatrix.row, column, cardNumber, number);
-        SpawnPowerUp();
+        //SpawnPowerUp();
         return scored;
     }
 

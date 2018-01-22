@@ -20,7 +20,7 @@ public class Number : MonoBehaviour
     private SpriteRenderer sr;
     private GameObject DoorObject;
     protected AnimatorOverrideController animatorOverrideController;
-    
+
 
     IEnumerator WaitRoutine(Transform target)
     {
@@ -49,15 +49,17 @@ public class Number : MonoBehaviour
     {
         transform.position = Vector3.Lerp(transform.position, position, Time.deltaTime * speed);
     }
+    private void Awake()
+    {
+        _animator = GetComponent<Animator>();
 
+    }
     // Use this for initialization
     void Start()
     {
-        transform.GetChild(0).parent = null;
         sr = GetComponent<SpriteRenderer>();
-        _animator = GetComponent<Animator>();
         _animator.runtimeAnimatorController = Resources.Load("NumberBox" + MyNumber) as RuntimeAnimatorController;
-        
+
         _turnManager = TurnManager.GetTurnManager;
         _soundManager = SoundManager.GetSoundManager;
         _manager = GameManager.GetGameManager;
@@ -90,6 +92,20 @@ public class Number : MonoBehaviour
         if (row != null)
             _manager.BoardHandler.MagnetizeRow(row, col);
         isMagnetized = true;
+    }
+
+    public void SkipSpawn(int number)
+    {
+        try
+        {
+            Debug.Log("Should skip spawn " + number.ToString());
+            _animator.runtimeAnimatorController = Resources.Load("NumberBox" + number) as RuntimeAnimatorController;
+            _animator.SetBool("isOnline", true);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.Log(ex);
+        }
     }
 
     public void Refill()
@@ -126,10 +142,6 @@ public class Number : MonoBehaviour
 
     public void PlaceTile()
     {
-        //Debug.Log(_myTransform);
-        //Debug.Log(_colliding);
-        //transform.SetParent(_colliding);
-        //transform.localPosition = Vector3.zero;
         transform.localScale *= 0.85f;
         isPlayed = true;
     }
@@ -137,19 +149,22 @@ public class Number : MonoBehaviour
     private void OnMouseUp()
     {
         Dropped = true;
-        if (_colliding == null || _colliding.childCount == 1)
+        if (_colliding == null)
         {
             _myTransform.position = StartPos;
         }
-        else if (Dropped && !isPlayed)
+        else if (Dropped && !isPlayed && _manager.UpdateMatrix(Mathf.RoundToInt(_colliding.position.x + 2),
+                Mathf.RoundToInt(_colliding.position.y + 2), this))
         {
             transform.SetParent(_colliding);
             transform.localPosition = Vector3.zero;
             PlaceTile();
-            _manager.UpdateMatrix(Mathf.RoundToInt(_colliding.position.x + 2),
-                Mathf.RoundToInt(_colliding.position.y + 2), this);
             _manager.SpawnCard(this, StartPos, TurnNumber);
             sr.sortingOrder = 0;
+        }
+        else
+        {
+            _myTransform.position = StartPos;
         }
         _soundManager.DropNumber();
     }

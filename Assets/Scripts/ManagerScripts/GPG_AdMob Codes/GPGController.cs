@@ -62,7 +62,6 @@ public class GPGController : RealTimeMultiplayerListener
         if (!IsAuthenticated())
         {
             platformInstance.Authenticate(success => {
-                Social.ShowLeaderboardUI();
                 LoadData();
             });
         }
@@ -398,7 +397,7 @@ public class GPGController : RealTimeMultiplayerListener
 
     public void OnPeersDisconnected(string[] participantIds)
     {
-        throw new NotImplementedException();
+        PlayGamesPlatform.Instance.RealTime.LeaveRoom();
     }
 
     public void OnRealTimeMessageReceived(bool isReliable, string senderId, byte[] data)

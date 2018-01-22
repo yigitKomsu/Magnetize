@@ -2,14 +2,18 @@
 
 public class ProjectConstants
 {
-    public const string dropAndSpawnNumber = "numberdrop";
-    public const string scoreNumber = "scorenumber";
+    public const string message_played = "numberdrop";
+    public const string message_spawnTile = "spawntile";
+    public const string message_scored = "scorenumber";
     public const string updateScore = "updatescore";
-    public const string updateCharge = "updatecharge";
+    public const string message_chargeUpdate = "updatecharge";
     public const string updateTime = "updatetime";
-    public const string bet = "bet";
-    public const string call = "call";
-    public const string satisfied = "satisfied";
+    public const string message_bet = "bet";
+    public const string message_call = "call";
+    public const string message_satisfied = "satisfied";
+    public const string message_tied = "tied";
+    public const string message_youwon = "youwon";
+    public const string message_youlost = "youlost";
 
     public const string WinText = "YOU WIN";
     public const string LoseText = "YOU LOSE";

@@ -16,7 +16,7 @@
             YourBet += TableBet;
             var data = new string[]
             {
-                ProjectConstants.call
+                ProjectConstants.message_call
             };
             GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
                 GPGController.GetOpponentId());
@@ -31,7 +31,7 @@
             YourBet += difference;
             var data = new string[]
             {
-                ProjectConstants.call
+                ProjectConstants.message_call
             };
             GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
                 GPGController.GetOpponentId());
@@ -59,7 +59,7 @@
         YourBet += increaseAmount;
         var data = new string[]
         {
-            ProjectConstants.bet,
+            ProjectConstants.message_bet,
             increaseAmount.ToString()
         };
         GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
@@ -91,7 +91,7 @@
             {
                 var msg = new string[]
                 {
-                ProjectConstants.satisfied
+                ProjectConstants.message_satisfied
                 };
                 GPGController.SendByteMessage(GPGBytePackager.CreatePackage(msg), GPGController.GetOpponentId());
                 UnityEngine.Debug.Log("Both devices are satisfied!!! Total bet is: " + Bet.TotalBet);

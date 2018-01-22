@@ -14,7 +14,13 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Number[] PlayerTwoNumbers;
     [SerializeField]
+    private GameObject[] PlayerOneDoors;
+    [SerializeField]
+    private GameObject[] PlayerTwoDoors;
+    [SerializeField]
     private Vector2[] PlayerOnePositions, PlayerTwoPositions;
+    [SerializeField]
+    private Sprite[] Numbers;
     public GameBoardHandler BoardHandler;
     public int Limit;
     public int LimitType;
@@ -45,6 +51,14 @@ public class GameManager : MonoBehaviour
     public void SetSecondNonPlayable()
     {
         foreach (var item in PlayerTwoNumbers)
+        {
+            item.TurnNumber = -1; //he cannot play these then
+        }
+    }
+
+    public void SetFirstNonPlayable()
+    {
+        foreach (var item in PlayerOneNumbers)
         {
             item.TurnNumber = -1; //he cannot play these then
         }
@@ -102,8 +116,9 @@ public class GameManager : MonoBehaviour
         spawned.transform.parent = BoardHandler.transform;
         spawned.transform.localPosition = new Vector2(pos_x, pos_y);
         spawned.GetComponent<Number>().MyNumber = number;
-        spawned.GetComponent<Number>().TurnNumber = -10; //non playable
         spawned.GetComponent<Number>().PlaceTile();
+        spawned.GetComponent<Number>().TurnNumber = -10; //non playable
+        spawned.GetComponent<Number>().SkipSpawn(number);
         BoardHandler.GameBoardMatrix.row[pos_y + 2].column[pos_x + 2] = spawned.GetComponent<Number>();
         ControlMatrix(pos_x + 2, pos_y + 2, spawned.GetComponent<Number>().MyNumber);
     }
@@ -121,51 +136,95 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AnimateDoor(int turn, int index)
+    {
+        switch (turn)
+        {
+            case 1:
+                PlayerOneDoors[index].GetComponent<Animator>().SetTrigger("start");
+                break;
+            case 2:
+                PlayerTwoDoors[index].GetComponent<Animator>().SetTrigger("start");
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void UpdateOnlineOpponentCard(int index, int number)
+    {
+
+        Debug.Log("Changing opponent number");
+        PlayerTwoNumbers[index].GetComponent<Animator>().runtimeAnimatorController =
+            Resources.Load("NumberBox" + number) as RuntimeAnimatorController;
+        if(PlayerTwoNumbers[index].MyNumber == number)
+            PlayerTwoDoors[index].GetComponent<Animator>().SetTrigger("restart");
+        PlayerTwoDoors[index].GetComponent<Animator>().SetTrigger("start");
+    }
+
     private void SetNumberIndex(Number number, Number spawned)
     {
-        if(number.TurnNumber == 1)
+        if (number.TurnNumber == 1)
         {
             for (int i = 0; i < PlayerOneNumbers.Length; i++)
             {
-                if(PlayerOneNumbers[i] == number)
+                if (PlayerOneNumbers[i] == number)
                 {
                     PlayerOneNumbers[i] = spawned;
-                    //Send message for PlayerOneNumbers index i to be spawned with number and turnNumber
+                    AnimateDoor(1, i);
+                    if (isOnline)
+                    {
+                        string[] data = new string[]
+                        {
+                            ProjectConstants.message_spawnTile,
+                            spawned.MyNumber.ToString(),
+                            i.ToString()
+                        };
+                        GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
+                            GPGController.GetOpponentId());
+                    }
                     break;
                 }
             }
         }
-        else if(number.TurnNumber == 2)
+        else if (number.TurnNumber == 2)
         {
             for (int i = 0; i < PlayerTwoNumbers.Length; i++)
             {
                 if (PlayerTwoNumbers[i] == number)
                 {
                     PlayerTwoNumbers[i] = spawned;
-                    //Send message for PlayerTwoNumbers index i to be spawned with number and turnNumber
+                    AnimateDoor(2, i);
+                    
                     break;
                 }
             }
         }
     }
 
-    public void UpdateMatrix(int pos_x, int pos_y, Number card)
+    public bool UpdateMatrix(int pos_x, int pos_y, Number card)
     {
-        if(isOnline)
+        
+        if(BoardHandler.GameBoardMatrix.row[pos_y].column[pos_x] != null)
+        {
+            return false;
+        }
+        if (isOnline)
         {
             string[] data = new string[]
             {
-                ProjectConstants.dropAndSpawnNumber,
+                ProjectConstants.message_played,
                 pos_x.ToString(),
                 pos_y.ToString(),
                 card.MyNumber.ToString()
             };
-            GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data), 
+            GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
                 GPGController.GetOpponentId());
         }
         BoardHandler.GameBoardMatrix.row[pos_y].column[pos_x] = card;
         BoardHandler.GivePower(pos_x, pos_y, card);
         ControlMatrix(pos_x, pos_y, card.MyNumber);
+        return true;
     }
 
     private void SetGame()
@@ -220,12 +279,12 @@ public class GameManager : MonoBehaviour
         if (winnerIndex == 0)
         {
             ScoreObject[1].PrintToTurnField(ProjectConstants.LoseText);
-            //Send YOU WON message
+            //Send YOU LOST message because I won
         }
         else if (winnerIndex == 1)
         {
             ScoreObject[0].PrintToTurnField(ProjectConstants.LoseText);
-            //Send YOU LOST message
+            //Send YOU WON message because I lost
         }
         _turnManager.ShowPanels();
         _soundManager.StopLoop();
