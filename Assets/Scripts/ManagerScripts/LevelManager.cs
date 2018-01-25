@@ -11,9 +11,11 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private GameObject MenuButtonPanel;
     [SerializeField]
-    private Text OnlineStatusText, CurrentIncreaseText, CurrentBetText, NotificationText, RemainingCreditsTest;
+    private Text OnlineStatusText, CurrentIncreaseText, CurrentBetText, NotificationText, RemainingCreditsText;
     private GameManager _manager;
     private bool isOnline = false;
+    public Image Light;
+    public Sprite on, off;
     public int Limit;
     public LimitTypes Type;
     private int timeLimit, scoreLimit, pieceLimit;
@@ -35,12 +37,21 @@ public class LevelManager : MonoBehaviour
         Limit = timeLimit = scoreLimit = pieceLimit = 30;
         if (GetLevelManager == null) GetLevelManager = this;
         SetDevicePrefs();
+        RemainingCreditsText.text = ProjectConstants.userCredit.ToString();
+    }
+
+    public void ToggleLight(bool turn)
+    {
+        if (turn)
+            Light.sprite = off;
+        else
+            Light.sprite = on;
     }
 
     public void BetText()
     {
         CurrentBetText.text = "CURRENT BET: " + Bet.TotalBet.ToString();
-        RemainingCreditsTest.text = ProjectConstants.userCredit.ToString();
+        RemainingCreditsText.text = ProjectConstants.userCredit.ToString();
     }
 
     public void BetEventText(string message)
@@ -51,6 +62,9 @@ public class LevelManager : MonoBehaviour
     public void WaitingRoomClose()
     {
         GPGController.LeaveRoom();
+        WaitingPanelClosed();
+        UpdateOnlineStatusText("CANCELLING");
+
         //Button kodu
     }
 
@@ -149,7 +163,8 @@ public class LevelManager : MonoBehaviour
 
     public void LoadOnlineGame(int type)
     {
-        GPGController.GetGpgController.CreateOrJoinQuickMatch(type); //Button kodu
+        var invariant = Limit.ToString() + type.ToString(); //böylece aynı limittekiler eşleşecek
+        GPGController.GetGpgController.CreateOrJoinQuickMatch(int.Parse(invariant)); //Button kodu
         OnlineStatusPanel.SetActive(true);
     }    
 

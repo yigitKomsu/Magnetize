@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     private Vector2[] PlayerOnePositions, PlayerTwoPositions;
     [SerializeField]
     private Sprite[] Numbers;
+    [SerializeField]
+    private GameObject[] MagnetizeRows;
     public GameBoardHandler BoardHandler;
     public int Limit;
     public int LimitType;
@@ -46,6 +48,16 @@ public class GameManager : MonoBehaviour
         scored = false;
 
         SetGame();
+    }
+
+    public void MagnetizeRow(int index)
+    {
+        MagnetizeRows[index].GetComponent<Animator>().SetTrigger("magnetize");
+    }
+
+    public void UpdateScoreHandlerCharge(int charge, int turn)
+    {
+        ScoreObject[turn].UpdateInternalCharge(ScoreObject[turn].Charge - charge);
     }
 
     public void SetSecondNonPlayable()

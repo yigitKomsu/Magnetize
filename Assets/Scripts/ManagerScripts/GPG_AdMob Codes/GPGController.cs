@@ -6,6 +6,7 @@ using System.Text;
 using GooglePlayGames.BasicApi.Multiplayer;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SocialPlatforms;
 
 public struct Player
 {
@@ -61,7 +62,8 @@ public class GPGController : RealTimeMultiplayerListener
         var platformInstance = PlayGamesPlatform.Instance;
         if (!IsAuthenticated())
         {
-            platformInstance.Authenticate(success => {
+            platformInstance.Authenticate(success =>
+            {
                 LoadData();
             });
         }
@@ -264,7 +266,7 @@ public class GPGController : RealTimeMultiplayerListener
 
     public void AddScoreToLeaderBoard(string leaderboardId, long credit)
     {
-        Social.ReportScore(credit, leaderboardId, success => { });
+        Social.ReportScore(credit, leaderboardId, success => { ProjectConstants.UpdateUserCredit(credit); });
     }
 
     public static bool IsAuthenticated()
@@ -313,16 +315,18 @@ public class GPGController : RealTimeMultiplayerListener
     public static void LeaveRoom()
     {
         PlayGamesPlatform.Instance.RealTime.LeaveRoom();
-        LevelManager.GetLevelManager.UpdateOnlineStatusText("CANCELLING");
     }
 
     public static void SendByteMessage(byte[] data, string participantId)
     {
-        PlayGamesPlatform.Instance.RealTime.SendMessage(true, participantId, data);
+        if (GameManager.GetGameManager.isOnline)
+            PlayGamesPlatform.Instance.RealTime.SendMessage(true, participantId, data);
     }
 
     public static string GetOpponentId()
     {
+        if (!GameManager.GetGameManager.isOnline)
+            return "";
         List<Participant> participants = PlayGamesPlatform.Instance.RealTime.GetConnectedParticipants();
         string id = "";
         foreach (var item in participants)
@@ -368,8 +372,6 @@ public class GPGController : RealTimeMultiplayerListener
             player_two.participant = participants[1];
             player_two.assignedTurnNumber = 2;
             player_two.isMyself = participants[1].ParticipantId == myself.ParticipantId;
-            Debug.Log(player_one);
-            Debug.Log(player_two);
             LevelManager.GetLevelManager.OpenBetPanel();
         }
         else
@@ -381,7 +383,7 @@ public class GPGController : RealTimeMultiplayerListener
 
     public void OnLeftRoom()
     {
-        LevelManager.GetLevelManager.WaitingPanelClosed();
+
     }
 
     public void OnParticipantLeft(Participant participant)

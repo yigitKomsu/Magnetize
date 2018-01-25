@@ -2,18 +2,20 @@
 {
     public static int YourBet = 0;
     public static int OpBet = 0;
-    public const int TableBet = 10;
+    public static int TableBet = 10; //default
     public static bool myTurn = false;
     public static int TotalBet { get { return YourBet + OpBet + TableBet; } }
 
     public static int Call()
     {
         if (!myTurn) return 0;
+        LevelManager.GetLevelManager.ToggleLight(myTurn);
 
         myTurn = false;
-        if (YourBet == 0 && OpBet == 0)
+        if ((YourBet == 0 && OpBet == 0) && ProjectConstants.userCredit - TableBet > 0)
         {
             YourBet += TableBet;
+            ProjectConstants.userCredit -= TableBet;
             var data = new string[]
             {
                 ProjectConstants.message_call
@@ -21,14 +23,14 @@
             GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
                 GPGController.GetOpponentId());
             LevelManager.GetLevelManager.BetEventText("You called " + TableBet);
-
             LevelManager.GetLevelManager.BetText();
             return TableBet;
         }
-        else if (YourBet < OpBet)
+        else if ((YourBet < OpBet) && ProjectConstants.userCredit - (OpBet - YourBet) > 0)
         {
             int difference = OpBet - YourBet;
             YourBet += difference;
+            ProjectConstants.userCredit -= difference;
             var data = new string[]
             {
                 ProjectConstants.message_call
@@ -45,32 +47,52 @@
     public static int CallAndIncrease(int increaseAmount)
     {
         if (!myTurn) return 0;
-
+        LevelManager.GetLevelManager.ToggleLight(myTurn);
         myTurn = false;
-        if (YourBet == 0 && OpBet == 0)
+        
+        if ((YourBet == 0 && OpBet == 0) && 
+            ProjectConstants.userCredit - TableBet - increaseAmount > 0)
         {
             YourBet += TableBet;
-        }
-        else if (YourBet < OpBet)
-        {
-            int difference = OpBet - YourBet;
-            YourBet += difference;
-        }
-        YourBet += increaseAmount;
-        var data = new string[]
+            ProjectConstants.userCredit -= TableBet;
+            YourBet += increaseAmount;
+            ProjectConstants.userCredit -= increaseAmount;
+            var data = new string[]
         {
             ProjectConstants.message_bet,
             increaseAmount.ToString()
         };
-        GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
-            GPGController.GetOpponentId());
-        LevelManager.GetLevelManager.BetEventText("You called " + TableBet);
-        LevelManager.GetLevelManager.BetText();
+            GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
+                GPGController.GetOpponentId());
+            LevelManager.GetLevelManager.BetEventText("You called " + TableBet);
+            LevelManager.GetLevelManager.BetText();
+        }
+        else if ((YourBet < OpBet) && 
+            ProjectConstants.userCredit - (OpBet - YourBet) - increaseAmount > 0)
+        {
+            int difference = OpBet - YourBet;
+            YourBet += difference;
+            ProjectConstants.userCredit -= difference;
+            YourBet += increaseAmount;
+            ProjectConstants.userCredit -= increaseAmount;
+            var data = new string[]
+        {
+            ProjectConstants.message_bet,
+            increaseAmount.ToString()
+        };
+            GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
+                GPGController.GetOpponentId());
+            LevelManager.GetLevelManager.BetEventText("You called " + difference);
+            LevelManager.GetLevelManager.BetText();
+        }        
+        
         return increaseAmount;
     }
 
     public static int OpCall()
     {
+        LevelManager.GetLevelManager.ToggleLight(myTurn);
+
         if (YourBet == 0 && OpBet == 0)
         {
             OpBet += TableBet;
@@ -89,6 +111,7 @@
             myTurn = true;
             if (IsSatisfied())
             {
+                LevelManager.GetLevelManager.BetEventText("Game is starting".ToUpper());
                 var msg = new string[]
                 {
                 ProjectConstants.message_satisfied
@@ -105,6 +128,8 @@
 
     public static int OpCallAndIncrease(int increaseAmount)
     {
+        LevelManager.GetLevelManager.ToggleLight(myTurn);
+
         int difference = 0;
         if (OpBet == 0 && YourBet == 0)
         {

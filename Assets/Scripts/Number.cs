@@ -127,6 +127,7 @@ public class Number : MonoBehaviour
 
     private void OnMouseDown()
     {
+        sr.sortingOrder = 2;
         if (TurnNumber == _turnManager.TurnNumber && !isPlayed)
             _soundManager.PickNumber();
     }
@@ -151,6 +152,7 @@ public class Number : MonoBehaviour
         Dropped = true;
         if (_colliding == null)
         {
+            sr.sortingOrder = 1;
             _myTransform.position = StartPos;
         }
         else if (Dropped && !isPlayed && _manager.UpdateMatrix(Mathf.RoundToInt(_colliding.position.x + 2),
@@ -164,6 +166,7 @@ public class Number : MonoBehaviour
         }
         else
         {
+            sr.sortingOrder = 1;
             _myTransform.position = StartPos;
         }
         _soundManager.DropNumber();

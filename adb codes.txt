@@ -1,0 +1,8 @@
+cls
+D:\Installations\SDK_Tools\platform-tools\adb -s LGD855ac39e018 install -r D:\Repos\Unity\MAGNETIZE\Magnetize.apk
+D:\Installations\SDK_Tools\platform-tools\adb -s 520397a54ca54419 install -r D:\Repos\Unity\MAGNETIZE\Magnetize.apk
+
+D:\Installations\SDK_Tools\platform-tools\adb -s LGD855ac39e018 logcat Unity:I *:S
+
+
+adb -s 520397a54ca54419 logcat Unity:I *:S

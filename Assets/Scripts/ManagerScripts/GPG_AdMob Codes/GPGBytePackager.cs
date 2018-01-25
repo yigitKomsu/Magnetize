@@ -56,13 +56,22 @@ public class GPGBytePackager
             int pos_y = int.Parse(package[2]);
             int cardNumber = int.Parse(package[3]);
             GameManager.GetGameManager.SpawnCardFromPeer(cardNumber, -(pos_x - 2), -(pos_y - 2));
-            //eksilisiyle çarpıyorum ki mantığa otursun?
         }
         else if(actionType == ProjectConstants.message_spawnTile)
         {
             int number = int.Parse(package[1]);
             int index = int.Parse(package[2]);
             GameManager.GetGameManager.UpdateOnlineOpponentCard(index, number);
+        }
+        else if(actionType == ProjectConstants.message_updateTime)
+        {
+            int time = int.Parse(package[1]);
+            TurnManager.GetTurnManager.SetTime(time, 0);
+        }
+        else if(actionType == ProjectConstants.message_chargeUpdate)
+        {
+            int charge = int.Parse(package[1]);
+            GameManager.GetGameManager.UpdateScoreHandlerCharge(charge, 1);
         }
         //we have an unpacked package of unknown length
         //we need to process it somehow

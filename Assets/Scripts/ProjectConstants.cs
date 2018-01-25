@@ -7,7 +7,7 @@ public class ProjectConstants
     public const string message_scored = "scorenumber";
     public const string updateScore = "updatescore";
     public const string message_chargeUpdate = "updatecharge";
-    public const string updateTime = "updatetime";
+    public const string message_updateTime = "updatetime";
     public const string message_bet = "bet";
     public const string message_call = "call";
     public const string message_satisfied = "satisfied";
@@ -30,25 +30,24 @@ public class ProjectConstants
     public const string BannerAdId = "ca-app-pub-9092467960609637/7045783564";
     public const string TestBannerAdId = "ca-app-pub-3940256099942544/6300978111";
     public const string VideoAdId = "ca-app-pub-9092467960609637/2061050197";
-    public const string TestVideoAdId = "ca-app-pub-3940256099942544/5224354917";   
+    public const string TestVideoAdId = "ca-app-pub-3940256099942544/5224354917";
 
     public static int PlayerOne = 0;
     public static int PlayerTwo = 1;
     public static int Noone = 2;
 
-    public static int userCredit;
+    public static long userCredit = PlayerPrefs.HasKey("Credit") ? PlayerPrefs.GetInt("Credit") : 500;
     public static int tempUserCredit;
     public static int betAmount;
 
-    public static bool UpdateUserCredit(int value)
+    public static void UpdateUserCredit(long value)
     {
-        
-        return true;
+        userCredit = value;
     }
-    
+
     public static void RestoreUserCredit()
     {
-        
+
     }
 }
 

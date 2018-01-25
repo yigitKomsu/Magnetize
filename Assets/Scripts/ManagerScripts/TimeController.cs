@@ -34,6 +34,13 @@ public class TimeController : MonoBehaviour
     public void StartTimer()
     {
         _animator.SetTrigger("TimerStart");
+        string[] data = new string[]
+        {
+            ProjectConstants.message_updateTime,
+            PlayerTime.ToString()
+        };
+        GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data), 
+            GPGController.GetOpponentId());
     }
 
     public void StopTimer()

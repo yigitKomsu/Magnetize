@@ -35,7 +35,7 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 1
+  m_ReflectionIntensity: 0
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
@@ -1111,6 +1111,74 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 244425668}
+--- !u!1 &248551515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 248551516}
+  - component: {fileID: 248551518}
+  - component: {fileID: 248551517}
+  m_Layer: 5
+  m_Name: Image (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &248551516
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 248551515}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2.5434701, y: 2.5434706, z: 2.5434706}
+  m_Children: []
+  m_Father: {fileID: 1488326573}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 471, y: 1100}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &248551517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 248551515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 21300000, guid: b97160afa9d38fa459df772f28920fb7, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &248551518
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 248551515}
 --- !u!1 &299271722
 GameObject:
   m_ObjectHideFlags: 0
@@ -1916,7 +1984,10 @@ MonoBehaviour:
   CurrentIncreaseText: {fileID: 1083337146}
   CurrentBetText: {fileID: 787814464}
   NotificationText: {fileID: 1758264724}
-  RemainingCreditsTest: {fileID: 116211175}
+  RemainingCreditsText: {fileID: 116211175}
+  Light: {fileID: 248551517}
+  on: {fileID: 21300000, guid: 255f703e00a4bbf4e9b32ba957872799, type: 3}
+  off: {fileID: 21300000, guid: b97160afa9d38fa459df772f28920fb7, type: 3}
   Limit: 0
   Type: 1
   opponentBet: 0
@@ -4479,8 +4550,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1464137015}
   - component: {fileID: 1464137014}
-  - component: {fileID: 1464137013}
-  - component: {fileID: 1464137012}
   - component: {fileID: 1464137011}
   m_Layer: 0
   m_Name: Main Camera
@@ -4496,20 +4565,6 @@ AudioListener:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1464137010}
   m_Enabled: 1
---- !u!124 &1464137012
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1464137010}
-  m_Enabled: 0
---- !u!92 &1464137013
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1464137010}
-  m_Enabled: 0
 --- !u!20 &1464137014
 Camera:
   m_ObjectHideFlags: 0
@@ -4535,7 +4590,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: -1
+  m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
@@ -4592,6 +4647,7 @@ RectTransform:
   - {fileID: 1992693555}
   - {fileID: 944990950}
   - {fileID: 66077007}
+  - {fileID: 248551516}
   m_Father: {fileID: 1848860492}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

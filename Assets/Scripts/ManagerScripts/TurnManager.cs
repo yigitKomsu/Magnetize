@@ -32,6 +32,11 @@ public class TurnManager : MonoBehaviour
         Timer[turn].PlayerTime += time;
     }
 
+    public void SetTime(int time, int turn)
+    {
+        Timer[turn].PlayerTime = time;
+    }
+
     public void ChangeTurn()
     {
         if (timeOut)
@@ -50,6 +55,8 @@ public class TurnManager : MonoBehaviour
         _animator[TurnNumber - 1].SetTrigger("StartTurn");
         if (GameManager.GetGameManager.LimitType == (int)LimitTypes.Time)
             Timer[TurnNumber - 1].StartTimer();
+
+        Debug.Log("Turn number is: " + TurnNumber);
     }
 
     public void ShowPanels()

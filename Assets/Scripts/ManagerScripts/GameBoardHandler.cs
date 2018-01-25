@@ -213,6 +213,7 @@ public class GameBoardHandler : MonoBehaviour
         if(row != null && col != null)
         {
             int r = (int)row;
+            GameManager.GetGameManager.MagnetizeRow(r);
             int c = (int)col;
             for (int i = 0; i < GameBoardMatrix.row[r].column.Length; i++)
             {
@@ -251,7 +252,7 @@ public class GameBoardHandler : MonoBehaviour
         scored = false;
         ClearCellsAndScoreInRow(GameBoardMatrix.row[row].column, row, cardNumber, number);
         ClearCellsAndScoreInColumn(GameBoardMatrix.row, column, cardNumber, number);
-        //SpawnPowerUp();
+        SpawnPowerUp();
         return scored;
     }
 
