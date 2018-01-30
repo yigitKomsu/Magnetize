@@ -13,6 +13,10 @@ public class ProjectConstants
     public const string message_satisfied = "satisfied";
     public const string message_tied = "tied";
     public const string message_youwon = "youwon";
+    public const string message_double = "double";
+    public const string message_spawnPowerUp = "spawnpowerup";
+    public const string message_magnet = "magnet";
+    public const string message_refill = "refill";
     public const string message_youlost = "youlost";
 
     public const string WinText = "YOU WIN";

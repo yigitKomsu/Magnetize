@@ -3,13 +3,22 @@
 public class GameBoardHandler : MonoBehaviour
 {
     public ArrayLayout GameBoardMatrix;
+    public static GameBoardHandler GetGameBoardHandler;
     public GameObject ReturnButton;
     bool scored;
     public Transform flyPosition;
     public int sum;
     [SerializeField]
-    private GameObject PowerUp;
+    private GameObject PowerHolder;
+    [SerializeField]
+    private PowerUp[] PowerUp;
     private TurnManager _turnManager;
+
+    private void Awake()
+    {
+        GetGameBoardHandler = this;
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -187,30 +196,48 @@ public class GameBoardHandler : MonoBehaviour
         }
     }
 
+    public void SpawnPowerUp(int row, int col, int power)
+    {
+        var up = Instantiate(PowerHolder, transform).GetComponent<PowerHolder>();
+        up.MyPower = PowerUp[power];
+        Debug.Log("Spawning power up at: " + col.ToString() + row.ToString() + " of type " + up.MyPower.ToString());
+        up.ChangeSprite();
+        up.transform.localPosition = new Vector2(col, row);
+        GameBoardMatrix.row[2 + row].pColumn[2 + col] = up;
+    }
+
     private void SpawnPowerUp()
     {
         float perc = Random.Range(0, 99);
-        //if the device owner player, transmit the perc to the other user intead of randomly generating
         if (perc > 60 && !CheckBoardFull())
         {
             int rand_x = Random.Range(-2, 2);
-            //if the device owner player, transmit the rand_x to the other user intead of randomly generating
 
             int rand_y = Random.Range(-2, 2);
-            //if the device owner player, transmit the rand_y to the other user intead of randomly generating
 
             if (!GameBoardMatrix.row[rand_y + 2].column[rand_x + 2] && !GameBoardMatrix.row[rand_y + 2].pColumn[rand_x + 2])
             {
-                var up = Instantiate(PowerUp, transform);
+                var up = Instantiate(PowerHolder, transform).GetComponent<PowerHolder>();
                 up.transform.localPosition = new Vector2(rand_x, rand_y);
-                GameBoardMatrix.row[rand_y + 2].pColumn[rand_x + 2] = up.GetComponent<PowerUp>();
+                up.MyPower = PowerUp[Random.Range(0, PowerUp.Length)];
+                up.ChangeSprite();
+                GameBoardMatrix.row[rand_y + 2].pColumn[rand_x + 2] = up;
+                string[] data = new string[]
+                {
+                    ProjectConstants.message_spawnPowerUp,
+                    up.MyPower.powerType.ToString(),
+                    (rand_y).ToString(),
+                    (rand_x).ToString()
+                };
+                GPGController.SendByteMessage(GPGBytePackager.CreatePackage(data),
+                    GPGController.GetOpponentId());
             }
         }
-    } 
+    }
 
     public void MagnetizeRow(int? row, int? col)
     {
-        if(row != null && col != null)
+        if (row != null && col != null)
         {
             int r = (int)row;
             GameManager.GetGameManager.MagnetizeRow(r);
@@ -225,9 +252,10 @@ public class GameBoardHandler : MonoBehaviour
 
     public void GivePower(int pos_x, int pos_y, Number card)
     {
+        Debug.Log(GameBoardMatrix.row[pos_y].pColumn[pos_x]);
         if (GameBoardMatrix.row[pos_y].pColumn[pos_x] != null)
         {
-            var powerUp = GameBoardMatrix.row[pos_y].pColumn[pos_x].GetComponent<PowerUp>();
+            var powerUp = GameBoardMatrix.row[pos_y].pColumn[pos_x].GetComponent<PowerHolder>();
             GameBoardMatrix.row[pos_y].pColumn[pos_x] = null;
             powerUp.PowerThings(card, pos_y, pos_x);
         }
@@ -247,12 +275,13 @@ public class GameBoardHandler : MonoBehaviour
         }
     }
 
-    public bool ControlMatrix(int column, int row, int cardNumber, Number number)
+    public bool ControlMatrix(int column, int row, int cardNumber, Number number, bool isFromOpponent = false)
     {
         scored = false;
         ClearCellsAndScoreInRow(GameBoardMatrix.row[row].column, row, cardNumber, number);
         ClearCellsAndScoreInColumn(GameBoardMatrix.row, column, cardNumber, number);
-        SpawnPowerUp();
+        if (!isFromOpponent)
+            SpawnPowerUp();
         return scored;
     }
 
@@ -288,7 +317,7 @@ public class GameBoardHandler : MonoBehaviour
             }
         }
         ReturnButton.SetActive(true);
-        SumTheBoard();        
+        SumTheBoard();
     }
 
     public int SumTheBoard(int number = 0)

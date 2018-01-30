@@ -4225,7 +4225,12 @@ MonoBehaviour:
   ReturnButton: {fileID: 277134288}
   flyPosition: {fileID: 0}
   sum: 0
-  PowerUp: {fileID: 1439089400645014, guid: fac93a5ccb0538941a7ebd2918485ed0, type: 2}
+  PowerHolder: {fileID: 1439089400645014, guid: fac93a5ccb0538941a7ebd2918485ed0,
+    type: 2}
+  PowerUp:
+  - {fileID: 11400000, guid: 21a4409b6d686374cab6e061a2ee2acb, type: 2}
+  - {fileID: 11400000, guid: 85973b383fe6fbb4793231a75323c3a0, type: 2}
+  - {fileID: 11400000, guid: 6da8d72cc483cd64c96f66f86068712f, type: 2}
 --- !u!1 &1345770775
 GameObject:
   m_ObjectHideFlags: 0

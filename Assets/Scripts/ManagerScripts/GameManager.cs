@@ -132,7 +132,8 @@ public class GameManager : MonoBehaviour
         spawned.GetComponent<Number>().TurnNumber = -10; //non playable
         spawned.GetComponent<Number>().SkipSpawn(number);
         BoardHandler.GameBoardMatrix.row[pos_y + 2].column[pos_x + 2] = spawned.GetComponent<Number>();
-        ControlMatrix(pos_x + 2, pos_y + 2, spawned.GetComponent<Number>().MyNumber);
+        ControlMatrix(pos_x + 2, pos_y + 2, spawned.GetComponent<Number>().MyNumber, true);
+        BoardHandler.GivePower(pos_x + 2, pos_y + 2, spawned.GetComponent<Number>());
     }
 
     public void SpawnCard(Number number, Vector2 pos, int TurnNumber)
@@ -165,8 +166,6 @@ public class GameManager : MonoBehaviour
 
     public void UpdateOnlineOpponentCard(int index, int number)
     {
-
-        Debug.Log("Changing opponent number");
         PlayerTwoNumbers[index].GetComponent<Animator>().runtimeAnimatorController =
             Resources.Load("NumberBox" + number) as RuntimeAnimatorController;
         if(PlayerTwoNumbers[index].MyNumber == number)
@@ -241,12 +240,13 @@ public class GameManager : MonoBehaviour
 
     private void SetGame()
     {
-        if (LimitType == (int)LimitTypes.Charge)
+        if (LimitType == (int)LimitTypes.Charge && ScoreObject.Length > 0)
         {
             ScoreObject[0].Charge = ScoreObject[1].Charge = Limit;
             ScoreObject[0].UpdateCharge(0);
             ScoreObject[1].UpdateCharge(0);
         }
+        if(BoardHandler != null)
         BoardHandler.SumTheBoard();
     }
 
@@ -330,10 +330,10 @@ public class GameManager : MonoBehaviour
         BoardHandler.flyPosition = flyPosition;
     }
 
-    private void ControlMatrix(int column, int row, int cardNumber)
+    private void ControlMatrix(int column, int row, int cardNumber, bool isFromOpponent = false)
     {
         Number number = BoardHandler.GameBoardMatrix.row[row].column[column];
-        scored = BoardHandler.ControlMatrix(column, row, cardNumber, number);
+        scored = BoardHandler.ControlMatrix(column, row, cardNumber, number, isFromOpponent);
         if (scored)
             number.Destroy(row, column, _turnManager.TurnNumber, flyPosition);
         scored = false;

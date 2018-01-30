@@ -319,25 +319,27 @@ public class GPGController : RealTimeMultiplayerListener
 
     public static void SendByteMessage(byte[] data, string participantId)
     {
-        if (GameManager.GetGameManager.isOnline)
+        if (GameManager.GetGameManager != null && GameManager.GetGameManager.isOnline && PlayGamesPlatform.Instance.RealTime.IsRoomConnected())
             PlayGamesPlatform.Instance.RealTime.SendMessage(true, participantId, data);
     }
 
     public static string GetOpponentId()
     {
-        if (!GameManager.GetGameManager.isOnline)
-            return "";
-        List<Participant> participants = PlayGamesPlatform.Instance.RealTime.GetConnectedParticipants();
-        string id = "";
-        foreach (var item in participants)
+        if (GameManager.GetGameManager != null && GameManager.GetGameManager.isOnline && PlayGamesPlatform.Instance.RealTime.IsRoomConnected())
         {
-            if (item.ParticipantId != PlayGamesPlatform.Instance.RealTime.GetSelf().ParticipantId)
+            List<Participant> participants = PlayGamesPlatform.Instance.RealTime.GetConnectedParticipants();
+            string id = "";
+            foreach (var item in participants)
             {
-                id = item.ParticipantId;
-                break;
+                if (item.ParticipantId != PlayGamesPlatform.Instance.RealTime.GetSelf().ParticipantId)
+                {
+                    id = item.ParticipantId;
+                    break;
+                }
             }
+            return id;
         }
-        return id;
+        return "";
     }
 
     public static string GetOpponentName()
@@ -359,6 +361,7 @@ public class GPGController : RealTimeMultiplayerListener
     {
         if (success)
         {
+            GameManager.GetGameManager.isOnline = true;
             LevelManager.GetLevelManager.UpdateOnlineStatusText("CONNECTED!");
             Participant myself = PlayGamesPlatform.Instance.RealTime.GetSelf();
             Debug.Log("My participant ID is " + myself.ParticipantId);
@@ -383,7 +386,7 @@ public class GPGController : RealTimeMultiplayerListener
 
     public void OnLeftRoom()
     {
-
+        GameManager.GetGameManager.isOnline = false;
     }
 
     public void OnParticipantLeft(Participant participant)

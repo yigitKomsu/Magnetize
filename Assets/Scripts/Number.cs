@@ -90,7 +90,7 @@ public class Number : MonoBehaviour
     {
         _animator.SetTrigger("magnetize");
         if (row != null)
-            _manager.BoardHandler.MagnetizeRow(row, col);
+            GameManager.GetGameManager.BoardHandler.MagnetizeRow(row, col);
         isMagnetized = true;
     }
 
