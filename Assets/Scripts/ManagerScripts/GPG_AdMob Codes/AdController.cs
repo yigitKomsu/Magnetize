@@ -35,7 +35,7 @@ public class AdController
     private static void RequestBanner()
     {
 #if UNITY_ANDROID
-        string adUnitId = ProjectConstants.TestBannerAdId;
+        string adUnitId = ProjectConstants.BannerAdId;
 #endif
         bannerView = new BannerView(adUnitId, AdSize.Banner, AdPosition.Bottom);
         AdRequest request = new AdRequest.Builder().Build();
@@ -45,7 +45,7 @@ public class AdController
     private static void RequestRewardedVideo()
     {
 #if UNITY_ANDROID
-        string adUnitId = ProjectConstants.TestVideoAdId;
+        string adUnitId = ProjectConstants.VideoAdId;
 #endif
         AdRequest request = new AdRequest.Builder().Build();
         videoAd.LoadAd(request, adUnitId);

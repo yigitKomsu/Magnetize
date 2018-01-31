@@ -59,23 +59,19 @@ public class LevelManager : MonoBehaviour
     public void BetEventText(string message)
     {
         NotificationText.text = message.ToUpper();
-    }
-
-    
+    }    
 
     public void OpenBetPanel()
     {
+        Bet.YourBet = Bet.OpBet = 0;
         BetPanel.SetActive(true);
+        BetText();
     }
 
     public void WaitingPanelClosed()
     {
         OnlineStatusPanel.SetActive(false);
-    }
-
-    
-
-    
+    }    
 
     public void UpdateOnlineStatusText(string text)
     {
@@ -138,13 +134,12 @@ public class LevelManager : MonoBehaviour
             _manager.SetSecondNonPlayable();
             _manager.isOnline = isOnline;
         }
-    }
-
-    
+    }   
 
     public void LoadOnlineGame(int type)
     {
-        Bet.TableBet = Limit * 2;
+        Bet.TableBet = Limit * 2; //masa bedelini ayarla
+        NotificationText.text = "ROOM PUTS " + Bet.TableBet.ToString();
         var invariant = Limit.ToString() + type.ToString(); //böylece aynı limittekiler eşleşecek
         GPGController.GetGpgController.CreateOrJoinQuickMatch(int.Parse(invariant)); //Button kodu
         OnlineStatusPanel.SetActive(true);

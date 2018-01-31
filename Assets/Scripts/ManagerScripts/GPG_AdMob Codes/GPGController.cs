@@ -177,7 +177,7 @@ public class GPGController : RealTimeMultiplayerListener
             player_one.isMyself = participants[0].ParticipantId == myself.ParticipantId;
 
             Bet.myTurn = player_one.isMyself;
-
+            LevelManager.GetLevelManager.ToggleLight(Bet.myTurn);
             player_two.participant = participants[1];
             player_two.assignedTurnNumber = 2;
             player_two.isMyself = participants[1].ParticipantId == myself.ParticipantId;

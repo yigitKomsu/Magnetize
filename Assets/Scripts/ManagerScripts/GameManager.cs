@@ -284,7 +284,6 @@ public class GameManager : MonoBehaviour
         {
             ScoreObject[0].PrintToTurnField(ProjectConstants.TiedText);
             ScoreObject[1].PrintToTurnField(ProjectConstants.TiedText);
-            //Send tied message
             _turnManager.ShowPanels();
             return;
         }
@@ -308,12 +307,14 @@ public class GameManager : MonoBehaviour
     {
         Result.GetComponent<UnityEngine.UI.Text>().text = "YOU LOST ";
         Result.GetComponent<UnityEngine.UI.Text>().text += Bet.YourBet.ToString();
+        Result.GetComponent<UnityEngine.UI.Text>().text += " CREDITS";
     }
 
     public void PrintYouWon()
     {
         Result.GetComponent<UnityEngine.UI.Text>().text = "YOU WON ";
         Result.GetComponent<UnityEngine.UI.Text>().text += Bet.TotalBet.ToString();
+        Result.GetComponent<UnityEngine.UI.Text>().text += " CREDITS";
         ProjectConstants.userCredit += Bet.YourBet + Bet.TableBet;
     }
 

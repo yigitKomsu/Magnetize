@@ -47,7 +47,7 @@ public class ProjectConstants
 
     public static void UpdateUserCredit(int value)
     {
-        userCredit = value;
+        userCredit += value;
     }
 
     public static void RestoreUserCredit()
