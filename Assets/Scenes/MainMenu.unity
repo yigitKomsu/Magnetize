@@ -385,7 +385,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 679311312}
+      - m_Target: {fileID: 524148937}
         m_MethodName: WaitingRoomClose
         m_Mode: 1
         m_Arguments:
@@ -869,7 +869,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 679311312}
+      - m_Target: {fileID: 524148937}
         m_MethodName: ShowAchievements
         m_Mode: 1
         m_Arguments:
@@ -1707,6 +1707,7 @@ GameObject:
   - component: {fileID: 524148936}
   - component: {fileID: 524148935}
   - component: {fileID: 524148934}
+  - component: {fileID: 524148937}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1759,6 +1760,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &524148937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 524148933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2683b16ca5b73ba4f9a4f7e840ef4cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &566101795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1835,7 +1847,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 679311312}
+      - m_Target: {fileID: 524148937}
         m_MethodName: RequestVideo
         m_Mode: 1
         m_Arguments:
@@ -1982,6 +1994,7 @@ MonoBehaviour:
   MenuButtonPanel: {fileID: 127592698}
   OnlineStatusText: {fileID: 299271724}
   CurrentIncreaseText: {fileID: 1083337146}
+  Result: {fileID: 0}
   CurrentBetText: {fileID: 787814464}
   NotificationText: {fileID: 1758264724}
   RemainingCreditsText: {fileID: 116211175}
@@ -2791,9 +2804,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 679311312}
+      - m_Target: {fileID: 524148937}
         m_MethodName: CallAndIncrease
-        m_Mode: 3
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3197,7 +3210,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: CALL AND ADD 10
+  m_Text: ADD YOUR TOTAL BET
 --- !u!222 &1083337147
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4423,6 +4436,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ScoreObject: []
   NumberBox: {fileID: 0}
+  Result: {fileID: 0}
   PlayerOneNumbers: []
   PlayerTwoNumbers: []
   PlayerOneDoors: []
@@ -6657,7 +6671,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 679311312}
+      - m_Target: {fileID: 524148937}
         m_MethodName: Call
         m_Mode: 1
         m_Arguments:

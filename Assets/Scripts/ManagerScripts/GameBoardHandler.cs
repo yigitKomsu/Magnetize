@@ -200,7 +200,6 @@ public class GameBoardHandler : MonoBehaviour
     {
         var up = Instantiate(PowerHolder, transform).GetComponent<PowerHolder>();
         up.MyPower = PowerUp[power];
-        Debug.Log("Spawning power up at: " + col.ToString() + row.ToString() + " of type " + up.MyPower.ToString());
         up.ChangeSprite();
         up.transform.localPosition = new Vector2(col, row);
         GameBoardMatrix.row[2 + row].pColumn[2 + col] = up;
@@ -317,6 +316,8 @@ public class GameBoardHandler : MonoBehaviour
             }
         }
         ReturnButton.SetActive(true);
+        GameObject.Find("Canvas").GetComponent<Canvas>().sortingLayerName = "ForeForeGround";
+        GameObject.Find("Canvas").GetComponent<Canvas>().sortingOrder = 5;
         SumTheBoard();
     }
 

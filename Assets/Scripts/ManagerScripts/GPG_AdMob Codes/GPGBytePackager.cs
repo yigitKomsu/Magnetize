@@ -70,40 +70,8 @@ public class GPGBytePackager
             int charge = int.Parse(package[1]);
             GameManager.GetGameManager.UpdateScoreHandlerCharge(charge, 1);
         }
-        //else if(actionType == ProjectConstants.message_double)
-        //{
-
-        //    UnityEngine.Debug.Log("Message received: " + package[0]);
-        //    int row = int.Parse(package[1]);
-        //    int col = int.Parse(package[2]);
-        //    GameManager.GetGameManager.BoardHandler.GameBoardMatrix.row[4 - row].pColumn[4 - col].
-        //        PowerThings(GameManager.GetGameManager.BoardHandler.
-        //        GameBoardMatrix.row[4 - row].column[4 - col], 4 - row, 4 - col, true);
-        //}
-        //else if (actionType == ProjectConstants.message_magnet)
-        //{
-        //    UnityEngine.Debug.Log("Message received: " + package[0]);
-        //    int row = int.Parse(package[1]);
-        //    int col = int.Parse(package[2]);
-        //    GameManager.GetGameManager.BoardHandler.GameBoardMatrix.row[4 - row].pColumn[4 - col].
-        //        PowerThings(GameManager.GetGameManager.BoardHandler.
-        //        GameBoardMatrix.row[4 - row].column[4 - col], 4 - row, 4 - col, true);
-        //}
-        //else if (actionType == ProjectConstants.message_refill)
-        //{
-        //    UnityEngine.Debug.Log("Message received: " + package[0]);
-        //    int row = int.Parse(package[1]);
-        //    int col = int.Parse(package[2]);
-        //    UnityEngine.Debug.Log(GameManager.GetGameManager.BoardHandler.GameBoardMatrix);
-        //    UnityEngine.Debug.Log(GameManager.GetGameManager.BoardHandler.GameBoardMatrix.row[4 - row]);
-        //    UnityEngine.Debug.Log(GameManager.GetGameManager.BoardHandler.GameBoardMatrix.row[4 - row].pColumn[4 - col]);
-        //    GameManager.GetGameManager.BoardHandler.GameBoardMatrix.row[4 - row].pColumn[4 - col].
-        //        PowerThings(GameManager.GetGameManager.BoardHandler.
-        //        GameBoardMatrix.row[4 - row].column[4 - col], 4 - row, 4 - col, true);
-        //}
         else if(actionType == ProjectConstants.message_spawnPowerUp)
         {
-            UnityEngine.Debug.Log("Message received: " + package[0]);
             string powerUpType = package[1];
             int row = int.Parse(package[2]);
             int col = int.Parse(package[3]);

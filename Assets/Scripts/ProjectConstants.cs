@@ -40,11 +40,12 @@ public class ProjectConstants
     public static int PlayerTwo = 1;
     public static int Noone = 2;
 
-    public static long userCredit = PlayerPrefs.HasKey("Credit") ? PlayerPrefs.GetInt("Credit") : 500;
+    public static int userCredit = PlayerPrefs.HasKey("Credit") ? 
+        PlayerPrefs.GetInt("Credit") : 500;
     public static int tempUserCredit;
     public static int betAmount;
 
-    public static void UpdateUserCredit(long value)
+    public static void UpdateUserCredit(int value)
     {
         userCredit = value;
     }

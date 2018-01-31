@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private ScoreHandler[] ScoreObject;
     [SerializeField]
-    private GameObject NumberBox;
+    private GameObject NumberBox, Result;
     [SerializeField]
     private Number[] PlayerOneNumbers;
     [SerializeField]
@@ -118,6 +118,8 @@ public class GameManager : MonoBehaviour
 
     public void ReturnToMenu()
     {
+        PlayerPrefs.SetInt("Credit", ProjectConstants.userCredit);
+        Debug.Log(ProjectConstants.userCredit);
         LevelManager.GetLevelManager.LoadLevelWithoutBanner(ProjectConstants.MainMenu);
         Destroy(LevelManager.GetLevelManager.gameObject);
     }
@@ -265,13 +267,13 @@ public class GameManager : MonoBehaviour
     {
         if (ScoreObject[0].Score >= Limit)
         {
-            DecideWinner(ProjectConstants.PlayerOne);
             BoardHandler.ClearTheBoard();
+            DecideWinner(ProjectConstants.PlayerOne);
         }
         else if (ScoreObject[1].Score >= Limit)
         {
-            DecideWinner(ProjectConstants.PlayerTwo);
             BoardHandler.ClearTheBoard();
+            DecideWinner(ProjectConstants.PlayerTwo);
         }
     }
 
@@ -291,24 +293,32 @@ public class GameManager : MonoBehaviour
         if (winnerIndex == 0)
         {
             ScoreObject[1].PrintToTurnField(ProjectConstants.LoseText);
-            //Send YOU LOST message because I won
+            PrintYouWon();
         }
         else if (winnerIndex == 1)
         {
             ScoreObject[0].PrintToTurnField(ProjectConstants.LoseText);
-            //Send YOU WON message because I lost
+            PrintYouLost();
         }
         _turnManager.ShowPanels();
         _soundManager.StopLoop();
     }
 
+    public void PrintYouLost()
+    {
+        Result.GetComponent<UnityEngine.UI.Text>().text = "YOU LOST ";
+        Result.GetComponent<UnityEngine.UI.Text>().text += Bet.YourBet.ToString();
+    }
+
+    public void PrintYouWon()
+    {
+        Result.GetComponent<UnityEngine.UI.Text>().text = "YOU WON ";
+        Result.GetComponent<UnityEngine.UI.Text>().text += Bet.TotalBet.ToString();
+        ProjectConstants.userCredit += Bet.YourBet + Bet.TableBet;
+    }
+
     private void CompareScores()
     {
-        if (LimitType == (int)LimitTypes.Charge)
-        {
-            ScoreObject[0].Score += ScoreObject[0].Charge;
-            ScoreObject[1].Score += ScoreObject[1].Charge;
-        }
         if (ScoreObject[0].Score > ScoreObject[1].Score)
         {
             DecideWinner(ProjectConstants.PlayerOne);
@@ -341,8 +351,8 @@ public class GameManager : MonoBehaviour
             ControlForScore();
         if (BoardHandler.CheckBoardFull())
         {
-            CompareScores();
             BoardHandler.ClearTheBoard();
+            CompareScores();
         }
         else
         {

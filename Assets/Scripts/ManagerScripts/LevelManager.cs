@@ -11,7 +11,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private GameObject MenuButtonPanel;
     [SerializeField]
-    private Text OnlineStatusText, CurrentIncreaseText, CurrentBetText, NotificationText, RemainingCreditsText;
+    private Text OnlineStatusText, CurrentIncreaseText, Result, CurrentBetText, NotificationText, RemainingCreditsText;
     private GameManager _manager;
     private bool isOnline = false;
     public Image Light;
@@ -40,6 +40,8 @@ public class LevelManager : MonoBehaviour
         RemainingCreditsText.text = ProjectConstants.userCredit.ToString();
     }
 
+    
+
     public void ToggleLight(bool turn)
     {
         if (turn)
@@ -59,14 +61,7 @@ public class LevelManager : MonoBehaviour
         NotificationText.text = message.ToUpper();
     }
 
-    public void WaitingRoomClose()
-    {
-        GPGController.LeaveRoom();
-        WaitingPanelClosed();
-        UpdateOnlineStatusText("CANCELLING");
-
-        //Button kodu
-    }
+    
 
     public void OpenBetPanel()
     {
@@ -78,15 +73,9 @@ public class LevelManager : MonoBehaviour
         OnlineStatusPanel.SetActive(false);
     }
 
-    public void Call()
-    {
-        Bet.Call();
-    }
+    
 
-    public void CallAndIncrease(int amount)
-    {
-        Bet.CallAndIncrease(amount);
-    }
+    
 
     public void UpdateOnlineStatusText(string text)
     {
@@ -151,18 +140,11 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void RequestVideo()
-    {
-        AdController.ShowVideo(); //Button kodu
-    }
-
-    public void ShowAchievements()
-    {
-        GPGController.ShowAchievements(); //Button kodu
-    }
+    
 
     public void LoadOnlineGame(int type)
     {
+        Bet.TableBet = Limit * 2;
         var invariant = Limit.ToString() + type.ToString(); //böylece aynı limittekiler eşleşecek
         GPGController.GetGpgController.CreateOrJoinQuickMatch(int.Parse(invariant)); //Button kodu
         OnlineStatusPanel.SetActive(true);
@@ -235,6 +217,7 @@ public class LevelManager : MonoBehaviour
 
     public void LoadLevelWithoutBanner(string level)
     {
+        GPGController.LeaveRoom();
         SceneManager.LoadSceneAsync(level);
     }
 

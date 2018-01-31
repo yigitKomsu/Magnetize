@@ -21,24 +21,12 @@ public class GPGController : RealTimeMultiplayerListener
 
     public Player player_one, player_two;
 
-    public static int matchCost; //half of total bet
-
-    private const string SAVE_NAME = "Save";
+    public static int matchCost;
 
     private bool IsCloudDataLoaded = false, IsSaving = false;
 
     public void LoginToGPG()
     {
-        if (!PlayerPrefs.HasKey(SAVE_NAME))
-        {
-            PlayerPrefs.SetString(SAVE_NAME, "500");
-        }
-        if (!PlayerPrefs.HasKey("IsFirstTime"))
-        {
-            PlayerPrefs.SetInt("IsFirstTime", 1);
-        }
-
-        LoadLocal();
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
             .EnableSavedGames()
             .Build();
@@ -64,191 +52,11 @@ public class GPGController : RealTimeMultiplayerListener
         {
             platformInstance.Authenticate(success =>
             {
-                LoadData();
+                
             });
         }
     }
-
-    #region Save
-    private string GameDataToString()
-    {
-        return ProjectConstants.userCredit.ToString();
-    }
-
-    private void StringToGameData(string localData, string cloudData)
-    {
-        if (PlayerPrefs.GetInt("IsFirstTime") == 1)
-        {
-            PlayerPrefs.SetInt("IsFirstTime", 0);
-            if (int.Parse(cloudData) > int.Parse(localData))
-            {
-                PlayerPrefs.SetString(SAVE_NAME, cloudData);
-            }
-        }
-        else
-        {
-            if (int.Parse(localData) > int.Parse(cloudData))
-            {
-                ProjectConstants.userCredit = int.Parse(localData);
-                AddScoreToLeaderBoard(GPGSIds.leaderboard_credits, ProjectConstants.userCredit);
-                IsCloudDataLoaded = true;
-                SaveData();
-            }
-        }
-        ProjectConstants.userCredit = int.Parse(cloudData);
-        IsCloudDataLoaded = true;
-    }
-
-    private void StringToGameData(string localData)
-    {
-        ProjectConstants.userCredit = int.Parse(localData);
-    }
-
-    public void LoadData()
-    {
-        if (IsAuthenticated())
-        {
-            Debug.Log("Load data called");
-            IsSaving = false;
-            ((PlayGamesPlatform)Social.Active).SavedGame.
-                OpenWithManualConflictResolution(SAVE_NAME,
-                DataSource.ReadCacheOrNetwork, true, ResolveConflict, OnSavedGameOpened);
-        }
-        else
-        {
-            LoadLocal();
-        }
-    }
-
-    private void LoadLocal()
-    {
-        StringToGameData(PlayerPrefs.GetString(SAVE_NAME));
-    }
-
-    private void SaveLocal()
-    {
-        Debug.Log(ProjectConstants.userCredit);
-        PlayerPrefs.SetString(SAVE_NAME, GameDataToString());
-    }
-
-    public void SaveData()
-    {
-        if (!IsCloudDataLoaded)
-        {
-            SaveLocal();
-            return;
-        }
-        if (IsAuthenticated())
-        {
-            IsSaving = true;
-            Debug.Log(ProjectConstants.userCredit);
-            ((PlayGamesPlatform)Social.Active).SavedGame.
-                OpenWithManualConflictResolution(SAVE_NAME,
-                DataSource.ReadCacheOrNetwork, true, ResolveConflict, OnSavedGameOpened);
-        }
-        else
-        {
-            SaveLocal();
-        }
-    }
-
-    private void OnSavedGameOpened(SavedGameRequestStatus status, ISavedGameMetadata game)
-    {
-        if (status == SavedGameRequestStatus.Success)
-        {
-            if (!IsSaving)
-            {
-                LoadGame(game);
-            }
-            else
-            {
-                SaveGame(game);
-            }
-        }
-        else
-        {
-            if (!IsSaving)
-            {
-                LoadLocal();
-            }
-            else
-            {
-                SaveLocal();
-            }
-        }
-    }
-
-    private void LoadGame(ISavedGameMetadata game)
-    {
-        ((PlayGamesPlatform)Social.Active).SavedGame.ReadBinaryData(game, OnSavedGameDataRead);
-    }
-
-    private void OnSavedGameDataRead(SavedGameRequestStatus status, byte[] data)
-    {
-        if (status == SavedGameRequestStatus.Success)
-        {
-            string cloudData;
-            if (data.Length == 0)
-                cloudData = "500";
-            else
-                cloudData = GPGBytePackager.GetString(data);
-            string localData = PlayerPrefs.GetString(SAVE_NAME);
-            StringToGameData(localData, cloudData);
-        }
-    }
-
-    private void SaveGame(ISavedGameMetadata game)
-    {
-        string stringToSave = GameDataToString();
-        SaveLocal();
-        var data = GPGBytePackager.CreatePackage(stringToSave);
-
-        SavedGameMetadataUpdate update = new SavedGameMetadataUpdate.Builder().Build();
-        ((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate(game, update,
-            data, OnGameSaved);
-    }
-
-    private void OnGameSaved(SavedGameRequestStatus status, ISavedGameMetadata game)
-    {
-
-    }
-
-    private void ResolveConflict(IConflictResolver resolver,
-        ISavedGameMetadata original, byte[] originalData,
-        ISavedGameMetadata unmerged, byte[] unmergetData)
-    {
-        Debug.Log("Resolving conflict");
-
-        if (originalData == null)
-        {
-            Debug.Log("Getting unmerged");
-            resolver.ChooseMetadata(unmerged);
-        }
-        else if (unmergetData == null)
-        {
-            Debug.Log("Getting original");
-            resolver.ChooseMetadata(original);
-        }
-        else
-        {
-            var originalDataStr = GPGBytePackager.GetString(originalData);
-            var unmergedDataStr = GPGBytePackager.GetString(unmergetData);
-            Debug.Log("Comparing unmerged and original");
-            if (int.Parse(originalDataStr) > int.Parse(unmergedDataStr))
-            {
-                resolver.ChooseMetadata(original);
-                return;
-            }
-            else if (int.Parse(originalDataStr) > int.Parse(unmergedDataStr))
-            {
-                resolver.ChooseMetadata(unmerged);
-                return;
-            }
-            resolver.ChooseMetadata(original);
-        }
-    }
-    #endregion
-
+    
     public static void ShowAchievements()
     {
         Social.ShowAchievementsUI();
@@ -264,7 +72,7 @@ public class GPGController : RealTimeMultiplayerListener
         Social.ReportProgress(id, 100, success => { });
     }
 
-    public void AddScoreToLeaderBoard(string leaderboardId, long credit)
+    public void AddScoreToLeaderBoard(string leaderboardId, int credit)
     {
         Social.ReportScore(credit, leaderboardId, success => { ProjectConstants.UpdateUserCredit(credit); });
     }
@@ -362,9 +170,7 @@ public class GPGController : RealTimeMultiplayerListener
         if (success)
         {
             GameManager.GetGameManager.isOnline = true;
-            LevelManager.GetLevelManager.UpdateOnlineStatusText("CONNECTED!");
             Participant myself = PlayGamesPlatform.Instance.RealTime.GetSelf();
-            Debug.Log("My participant ID is " + myself.ParticipantId);
             List<Participant> participants = PlayGamesPlatform.Instance.RealTime.GetConnectedParticipants();
             player_one.participant = participants[0];
             player_one.assignedTurnNumber = 1;
@@ -379,7 +185,6 @@ public class GPGController : RealTimeMultiplayerListener
         }
         else
         {
-            LevelManager.GetLevelManager.UpdateOnlineStatusText("FAILED TO CONNECT");
             PlayGamesPlatform.Instance.RealTime.LeaveRoom();
         }
     }
@@ -408,8 +213,6 @@ public class GPGController : RealTimeMultiplayerListener
     public void OnRealTimeMessageReceived(bool isReliable, string senderId, byte[] data)
     {
         var message = GPGBytePackager.UnpackPackage(data);
-        Debug.Log("I received message from: " + senderId + " ");
         GPGBytePackager.ProcessPackage(message);
-
     }
 }
