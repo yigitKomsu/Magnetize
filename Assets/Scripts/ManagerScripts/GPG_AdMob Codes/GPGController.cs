@@ -28,10 +28,8 @@ public class GPGController : RealTimeMultiplayerListener
     public void LoginToGPG()
     {
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
-            .EnableSavedGames()
             .Build();
         PlayGamesPlatform.DebugLogEnabled = true;
-        Debug.Log(config.ToString());
         PlayGamesPlatform.InitializeInstance(config);
         PlayGamesPlatform.Activate();
         Login();
@@ -47,16 +45,22 @@ public class GPGController : RealTimeMultiplayerListener
 
     private void Login()
     {
-        var platformInstance = PlayGamesPlatform.Instance;
-        if (!IsAuthenticated())
+        try
         {
-            platformInstance.Authenticate(success =>
+            if (!IsAuthenticated())
             {
-                
-            });
+                PlayGamesPlatform.Instance.Authenticate(success =>
+                {
+                    
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+
         }
     }
-    
+
     public static void ShowAchievements()
     {
         Social.ShowAchievementsUI();
@@ -99,8 +103,6 @@ public class GPGController : RealTimeMultiplayerListener
 
     public void CreateOrJoinQuickMatch(int type)
     {
-        if (!IsAuthenticated())
-            return;
         try
         {
             LevelManager.GetLevelManager.UpdateOnlineStatusText("CONNECTING");
@@ -110,7 +112,6 @@ public class GPGController : RealTimeMultiplayerListener
         }
         catch (Exception ex)
         {
-            ProjectConstants.UpdateUserCredit(matchCost);
             LevelManager.GetLevelManager.UpdateOnlineStatusText(ex.Message);
         }
     }
@@ -122,7 +123,8 @@ public class GPGController : RealTimeMultiplayerListener
 
     public static void LeaveRoom()
     {
-        PlayGamesPlatform.Instance.RealTime.LeaveRoom();
+        if (IsAuthenticated())
+            PlayGamesPlatform.Instance.RealTime.LeaveRoom();
     }
 
     public static void SendByteMessage(byte[] data, string participantId)

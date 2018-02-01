@@ -24,7 +24,6 @@
 
 public static class GPGSIds
 {
-        public const string achievement_scoring_up = "CgkIqPap-MAGEAIQDQ"; // <GPGSID>
         public const string achievement_unlimited_power = "CgkIqPap-MAGEAIQHg"; // <GPGSID>
         public const string achievement_gamer = "CgkIqPap-MAGEAIQEg"; // <GPGSID>
         public const string achievement_welcome = "CgkIqPap-MAGEAIQDA"; // <GPGSID>

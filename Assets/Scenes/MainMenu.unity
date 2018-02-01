@@ -1999,6 +1999,7 @@ MonoBehaviour:
   NotificationText: {fileID: 1758264724}
   RemainingCreditsText: {fileID: 116211175}
   Light: {fileID: 248551517}
+  DebugStatus: {fileID: 0}
   on: {fileID: 21300000, guid: 255f703e00a4bbf4e9b32ba957872799, type: 3}
   off: {fileID: 21300000, guid: b97160afa9d38fa459df772f28920fb7, type: 3}
   Limit: 0
@@ -4658,7 +4659,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32
   m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
