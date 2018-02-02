@@ -112,6 +112,7 @@ public class GameManager : MonoBehaviour
     {
         ScoreObject[whose].Scored(number);
         ScorePlayer(number + 1, whose);
+        AchievementController.CollectingTiles();
         if (LimitType == (int)LimitTypes.Score)
             ControlForScore();
     }
@@ -305,6 +306,8 @@ public class GameManager : MonoBehaviour
 
     public void PrintYouLost()
     {
+        AchievementController.WinLoseAchievements(false, LimitType == (int)LimitTypes.Score);
+
         Result.GetComponent<UnityEngine.UI.Text>().text = "YOU LOST ";
         Result.GetComponent<UnityEngine.UI.Text>().text += Bet.YourBet.ToString();
         Result.GetComponent<UnityEngine.UI.Text>().text += " CREDITS";
@@ -312,6 +315,7 @@ public class GameManager : MonoBehaviour
 
     public void PrintYouWon()
     {
+        AchievementController.WinLoseAchievements(true, LimitType == (int)LimitTypes.Score);
         Result.GetComponent<UnityEngine.UI.Text>().text = "YOU WON ";
         Result.GetComponent<UnityEngine.UI.Text>().text += Bet.TotalBet.ToString();
         Result.GetComponent<UnityEngine.UI.Text>().text += " CREDITS";

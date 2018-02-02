@@ -35,6 +35,18 @@ public class ProjectConstants
     public const string TestBannerAdId = "ca-app-pub-3940256099942544/6300978111";
     public const string VideoAdId = "ca-app-pub-9092467960609637/2061050197";
     public const string TestVideoAdId = "ca-app-pub-3940256099942544/5224354917";
+    
+    public static int WinRowLimit_TierTwo = 5;
+    public static int WinRowLimit_TierOne = 3;
+    public static int LoseRowLimit_TierOne = 3;
+    public static int LoseRowLimit_TierTwo = 5;
+    public static int PowerUpUse_TierOne = 5;
+    public static int PowerUpUse_TierTwo = 10;
+    public static int PowerUpUse_TierThree = 100;
+    public static int MagnetizedRow_TierOne = 5;
+    public static int MagnetizedRow_TierTwo = 9;
+    public static int CollectRow_TierOne = 5;
+    public static int CollectRow_TierTwo = 9;
 
     public static int PlayerOne = 0;
     public static int PlayerTwo = 1;

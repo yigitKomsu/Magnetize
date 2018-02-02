@@ -51,7 +51,7 @@ public class GPGController : RealTimeMultiplayerListener
             {
                 PlayGamesPlatform.Instance.Authenticate(success =>
                 {
-                    
+
                 });
             }
         }
@@ -68,12 +68,14 @@ public class GPGController : RealTimeMultiplayerListener
 
     public static void IncrementAchievement(string id, double value)
     {
-        Social.ReportProgress(id, value, success => { });
+        if (GameManager.GetGameManager.isOnline)
+            Social.ReportProgress(id, value, success => { });
     }
 
-    public static void UnlockAchievement(string id)
+    public static void UnlockAchievement(string id, bool isOverride = false)
     {
-        Social.ReportProgress(id, 100, success => { });
+        if (isOverride || GameManager.GetGameManager.isOnline)
+            Social.ReportProgress(id, 100, success => { });
     }
 
     public void AddScoreToLeaderBoard(string leaderboardId, int credit)

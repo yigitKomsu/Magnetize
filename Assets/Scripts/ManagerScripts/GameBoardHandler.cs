@@ -238,13 +238,17 @@ public class GameBoardHandler : MonoBehaviour
     {
         if (row != null && col != null)
         {
+            AchievementController.MagnetizedTileCount = 0;
             int r = (int)row;
             GameManager.GetGameManager.MagnetizeRow(r);
             int c = (int)col;
             for (int i = 0; i < GameBoardMatrix.row[r].column.Length; i++)
             {
                 if (i != col && GameBoardMatrix.row[r].column[i] != null)
+                {
                     GameBoardMatrix.row[r].column[i].Magnetize();
+                    AchievementController.MagnetizingRow();
+                }
             }
         }
     }

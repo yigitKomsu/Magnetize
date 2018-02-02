@@ -144,6 +144,7 @@ public class Number : MonoBehaviour
     public void PlaceTile()
     {
         transform.localScale *= 0.85f;
+        AchievementController.CollectedTileCount = 0;
         isPlayed = true;
     }
 
